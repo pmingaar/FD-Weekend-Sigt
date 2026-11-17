@@ -26,7 +26,9 @@ dist/                 Bouwresultaat; niet handmatig aanpassen
 1. Pas `src/` aan (of zet een nieuwe sheet in `data/` en draai `python3 scripts/update_from_sheet.py`).
 2. `python3 scripts/build.py`
 3. Bekijk `dist/index.html` lokaal (bijvoorbeeld `python3 -m http.server -d dist`), ook op telefoonformaat (390 px breed).
-4. Publiceren: `npx wrangler pages deploy dist --project-name fd-weekend-sigt` (Patrick logt zelf in bij Cloudflare), of via een GitHub-repo die aan Cloudflare Pages gekoppeld is (build command: `python3 scripts/build.py`, output: `dist`).
+4. Publiceren: commit en push naar `main` op GitHub (pmingaar/FD-Weekend-Sigt). Cloudflare (Workers & Pages, project `fd-weekend-sigt`) bouwt en publiceert dan automatisch.
+
+Live adres: https://fd-weekend-sigt.patrick-7f3.workers.dev
 
 ## Data (src/data.json)
 
