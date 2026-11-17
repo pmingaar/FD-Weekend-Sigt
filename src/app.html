@@ -602,7 +602,7 @@ function avgAgeHTML(w,ppl){if(!w.date)return '';const part=(arr,lbl)=>{const k=a
 // "Was Annie de weg kwijt?": vaste willekeurige keuze per weekend (zelfde bij elke keer laden), alleen als Annet mee was
 function annieHTML(w){if(w.cancelled||w.upcoming||!(w.att&&w.att.annet>0))return '';
   let h=2166136261;for(const c of 'annie-'+w.ed+'-'+w.year){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}
-  const a=['Heenweg','Terugreis','Beiden 🙈','Nee, ze reed met Bossie mee'][(h>>>0)%4];
+  const a=['Heenweg','Terugreis','Zowel heen- als terugreis 🙈','Nee, ze reed met Bossie mee'][(h>>>0)%4];
   return `<div class="row annie"><span class="k">🧭</span><span><b>Was Annie de weg kwijt?</b> ${a}</span></div>`;}
 function standHTML(w){const s=w.stand;if(!s)return '';
   const C=[['ajax','Ajax'],['fey','Feyenoord'],['ado','ADO']];
