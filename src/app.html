@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FD-Weekend-Sigt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f1e7; --paper:#fffdf8; --ink:#1f2a24; --muted:#6b7268; --line:#e3dccd;
+  --green:#1f5c45; --green2:#2f7d5f; --orange:#e8743b; --sun:#f4b942; --pink:#d9577a;
+  --shadow:0 1px 2px rgba(31,42,36,.06),0 8px 24px rgba(31,42,36,.08);
+  --r:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;font-size:15px;line-height:1.45}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--green2)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+
+/* header */
+header.hero{background:radial-gradient(1200px 400px at 80% -10%,#2f7d5f 0%,transparent 60%),var(--green);color:#fff;padding:34px 0 26px;position:relative;overflow:hidden}
+header.hero::after{content:"";position:absolute;inset:auto -5% -1px -5%;height:40px;background:var(--bg);border-radius:50% 50% 0 0/100% 100% 0 0}
+.brand{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{width:58px;height:58px;border-radius:16px;background:var(--sun);display:grid;place-items:center;font-size:30px;box-shadow:0 6px 0 #c98f1d;transform:rotate(-6deg)}
+h1{font-family:Fraunces,serif;font-weight:800;font-size:clamp(30px,5vw,48px);margin:0;letter-spacing:-.5px}
+h1 span{color:var(--sun)}
+.tag{opacity:.85;margin:4px 0 0}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;position:relative;z-index:1}
+.stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:10px 16px;min-width:110px}
+.stat b{display:block;font-family:Fraunces,serif;font-size:26px;line-height:1}
+.stat small{opacity:.8}
+
+/* sections */
+section.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin:18px 0}
+.ph{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.ph h2{font-family:Fraunces,serif;font-size:20px;margin:0}
+.hint{color:var(--muted);font-size:13px}
+
+/* people */
+.people{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin}
+.pgroup{display:flex;gap:10px;align-items:flex-start}
+.psep{width:1px;background:var(--line);align-self:stretch;margin:0 6px;flex:none}
+.pbtn{flex:none;width:72px;background:none;border:0;padding:4px 0;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:14px;transition:transform .15s}
+.pbtn:hover{transform:translateY(-2px)}
+.pbtn .nm{font-size:12px;font-weight:500;text-align:center;line-height:1.15;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pbtn.on .av{outline:3px solid var(--orange);outline-offset:2px}
+.pbtn.dim{opacity:.35}
+.av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:17px;position:relative;flex:none;background:#999;overflow:hidden;user-select:none}
+.av img{width:100%;height:100%;object-fit:cover}
+.av.kid::after{content:"🧒";position:absolute;right:-2px;bottom:-2px;font-size:13px;background:#fff;border-radius:50%;width:18px;height:18px;display:grid;place-items:center}
+.av.sm{width:30px;height:30px;font-size:11px}
+.av.sm.kid::after{display:none}
+.av.lg{width:86px;height:86px;font-size:28px}
+
+.profile{display:none;margin-top:12px;border-top:1px dashed var(--line);padding-top:14px;gap:18px;align-items:center;flex-wrap:wrap}
+.profile.show{display:flex;animation:fadeUp .35s ease}
+.profile h3{margin:0;font-family:Fraunces,serif;font-size:22px}
+.pfacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:13px;white-space:nowrap}
+.chip b{font-weight:700}
+.upl{border:1px dashed var(--green2);color:var(--green2);background:#f1f8f4;border-radius:999px;padding:6px 12px;font-size:13px}
+.upl[hidden]{display:none}
+
+/* filters */
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+select{font:inherit;font-size:14px;padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:500}
+/* playful buttons */
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1;min-width:max-content;border:2px solid var(--ink);background:#fff;padding:8px 12px;border-radius:14px;font-size:14px;font-weight:700;box-shadow:0 4px 0 var(--ink);transition:transform .12s,box-shadow .12s,background .2s;text-transform:none;letter-spacing:0}
+.seg button:hover{transform:translateY(-2px) rotate(-1.5deg);box-shadow:0 6px 0 var(--ink)}
+.seg button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.seg button.on{background:var(--sun);animation:wiggle .45s ease}
+.seg button.on[data-v="kids"],.seg button.on[data-r="kid"]{background:#ffb48a}
+.seg button.on[data-v="adult"],.seg button.on[data-r="adult"]{background:#9fe0bf}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg) scale(1.05)}75%{transform:rotate(3deg) scale(1.05)}}
+select{border:2px solid var(--ink)!important;box-shadow:0 4px 0 var(--ink);border-radius:14px!important;font-weight:700!important;cursor:pointer;appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%231f2a24' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center!important;padding-right:34px!important;transition:transform .12s}
+select:hover{transform:translateY(-2px)}
+.locs{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.loc{--c:#e9f5ee;border:2px solid var(--ink);background:var(--c);border-radius:16px;padding:7px 13px;font-size:14px;font-weight:700;box-shadow:0 3px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.loc:nth-child(6n+1){--c:#ffe7a8;--r:-2deg}.loc:nth-child(6n+2){--c:#ffd3c2;--r:1.5deg}.loc:nth-child(6n+3){--c:#cfeedd;--r:-1deg}.loc:nth-child(6n+4){--c:#d8e4ff;--r:2deg}.loc:nth-child(6n+5){--c:#f3d6f5;--r:-1.5deg}.loc:nth-child(6n+6){--c:#e3f2b9;--r:1deg}
+.loc:hover{transform:translateY(-3px) rotate(var(--r,0deg));box-shadow:0 6px 0 var(--ink)}
+.loc:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.loc.on{background:var(--ink);color:#fff;transform:rotate(var(--r,0deg)) scale(1.06);animation:wiggle .45s ease}
+.loc i{font-style:normal;background:rgba(0,0,0,.12);border-radius:999px;padding:1px 7px;margin-left:6px;font-size:12px}
+.loc.on i{background:rgba(255,255,255,.25)}
+.timeline{display:flex;gap:3px;margin-top:16px;align-items:flex-end;height:46px}
+.yr{flex:1;min-width:0;border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.yr .bars{display:flex;flex-direction:column;gap:2px;width:100%;align-items:center}
+.yr .bar{width:72%;max-width:22px;height:9px;border-radius:3px;background:var(--green2)}
+.yr .bar.k{background:var(--orange)}
+.yr .bar.x{background:repeating-linear-gradient(45deg,#ccc 0 3px,#eee 3px 6px)}
+.yr small{font-size:9px;color:var(--muted)}
+.yr.on small{color:var(--ink);font-weight:700}
+.yr.on .bar{outline:2px solid var(--ink)}
+.yr.dim{opacity:.3}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--green2)}
+.legend span.k::before{background:var(--orange)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:22px 0 6px}
+.toolbar .count{font-family:Fraunces,serif;font-size:20px}
+.ghost{border:2px solid var(--ink);background:#fff;border-radius:999px;padding:7px 15px;font-size:13px;font-weight:700;box-shadow:0 3px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.ghost:hover{transform:translateY(-2px) rotate(1deg);box-shadow:0 5px 0 var(--ink);background:#fff7e0}
+.ghost:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.yr:hover .bar{transform:scaleY(1.3)}
+.yr .bar{transition:transform .15s}
+/* collage */
+.collage{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative}
+.collage img{width:100%;aspect-ratio:1;object-fit:cover;display:block;transition:transform .3s}
+.collage:hover img{transform:scale(1.05)}
+.collage .more{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));grid-auto-flow:dense;gap:8px;padding:12px;max-height:70vh;overflow:auto}
+.gal figure{margin:0;position:relative;border-radius:12px;overflow:hidden;background:#eee}
+.gal figure:nth-child(5n+1){grid-column:span 2;grid-row:span 2}
+.gal img{width:100%;height:100%;object-fit:cover;display:block;min-height:150px}
+.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:6px 8px;font-size:11px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.65))}
+.gal .del{position:absolute;top:6px;right:6px;border:0;background:rgba(255,255,255,.9);border-radius:50%;width:26px;height:26px}
+.photo .credit{position:absolute;bottom:8px;left:10px;font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px;margin-bottom:40px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;animation:fadeUp .4s ease both}
+.photo{position:relative;aspect-ratio:400/220;background:#cfe6f2;overflow:hidden}
+.photo svg,.photo img{width:100%;height:100%;display:block;object-fit:cover}
+.badge{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.94);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}
+.badge.kids{left:auto;right:10px;background:var(--orange);color:#fff}
+.badge.adult{left:auto;right:10px;background:var(--green);color:#fff}
+.photo .upl{position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,.92)}
+.photo .illus{position:absolute;bottom:8px;left:10px;font-size:11px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.cb{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.cb h3{margin:0;font-family:Fraunces,serif;font-size:21px;line-height:1.15}
+.cb .where{color:var(--muted);font-size:14px;margin-top:2px}
+.row{display:flex;gap:8px;font-size:14px}
+.row .k{flex:none;width:22px;text-align:center}
+.atts{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.atts .av{cursor:pointer}
+.atts .av.half{opacity:.55;outline:2px dashed #999;outline-offset:1px}
+.atts .av.hl{outline:3px solid var(--orange);outline-offset:1px}
+.atts .more{font-size:12px;color:var(--muted);margin-left:4px}
+.anek{margin-top:auto;border:0;border-radius:14px;padding:12px 14px;background:linear-gradient(135deg,#fff3e6,#ffe7d6);text-align:left;display:flex;gap:12px;align-items:center;transition:transform .15s}
+.anek:hover{transform:scale(1.015)}
+.anek .play{flex:none;width:38px;height:38px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:15px;box-shadow:0 3px 0 #b9541f}
+.anek .txt{font-size:14px}
+.anek .txt small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#b9541f;font-weight:700}
+.noanek{margin-top:auto;font-size:13px;color:var(--muted);font-style:italic;padding:10px 2px 0}
+.card.cancel{opacity:.85}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+
+/* modal / stage */
+.modal{position:fixed;inset:0;background:rgba(20,28,24,.72);display:none;place-items:center;z-index:50;padding:16px;backdrop-filter:blur(3px)}
+.modal.show{display:grid}
+.mbox{background:var(--paper);border-radius:22px;max-width:760px;width:100%;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4);animation:zoomIn .3s ease}
+.mhead{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mhead h3{margin:0;font-family:Fraunces,serif;font-size:18px}
+.mhead small{color:var(--muted);display:block;font-size:12px}
+.x{border:0;background:#efe9dc;width:34px;height:34px;border-radius:50%;font-size:18px;flex:none}
+.stage{position:relative;aspect-ratio:16/9;overflow:hidden;background:#9fd3ef;transition:background .6s}
+.stage .ground{position:absolute;left:0;right:0;bottom:0;height:24%;background:#7bbf6a;transition:background .6s}
+.stage.night{background:linear-gradient(#0f1b3a,#2a3a6b)} .stage.night .ground{background:#2d4a33}
+.stage.rain{background:linear-gradient(#7d8a99,#b3bcc6)} .stage.rain .ground{background:#5d8a55}
+.stage.hot{background:linear-gradient(#ffb347,#ffe08a)} .stage.hot .ground{background:#d9b25c}
+.stage.indoor{background:linear-gradient(#f3e3cb,#ead2b0)} .stage.indoor .ground{background:#b07d4f}
+.stage.water{background:linear-gradient(#8fd0f5,#cdeefe)} .stage.water .ground{background:#2f86c4}
+.stage.party{background:linear-gradient(135deg,#7b4bd8,#e85d9a)} .stage.party .ground{background:#40206e}
+.stage.day{background:linear-gradient(#8ccff0,#d8f0fb)}
+.caption{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);background:rgba(255,255,255,.95);padding:8px 16px;border-radius:14px;font-family:Fraunces,serif;font-weight:800;font-size:clamp(15px,2.6vw,24px);white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 4px 0 rgba(0,0,0,.15);z-index:5}
+.caption:empty{display:none}
+.beatnr{position:absolute;top:10px;right:12px;display:flex;gap:5px;z-index:5}
+.beatnr i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.45)}
+.beatnr i.on{background:#fff}
+.e{position:absolute;left:var(--x);top:var(--y);font-size:var(--s);line-height:1;transform:translate(-50%,-50%);animation-delay:var(--d);will-change:transform,top,left}
+.e>span{display:inline-block}
+.mfoot{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;padding:9px 16px;font-weight:700;background:var(--green);color:#fff}
+.btn.alt{background:#efe9dc;color:var(--ink)}
+
+.album{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.albtn{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;background:var(--green);color:#fff;text-decoration:none}
+.albtn.off{background:#efe9dc;color:var(--muted);font-weight:500}
+.album input{flex:1;min-width:160px;font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:10px}
+/* map */
+.mapwrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,1fr);gap:18px;align-items:start}
+.mapbox{position:relative;background:#cfe6f2;border:2px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:0 4px 0 var(--ink)}
+#map{display:block;width:100%;height:auto}
+#map .land{stroke:#fff;stroke-width:.8}
+#map .NL{fill:#f6e7c1}#map .BE{fill:#e7ecd6}#map .LU{fill:#e2e6f3}#map .other{fill:#dfe3df}
+#map .route{stroke:var(--orange);stroke-width:1.4;stroke-dasharray:4 4;fill:none;opacity:.55}
+#map .route.on{opacity:1;stroke-width:2.6;stroke-dasharray:none}
+#map .pin{cursor:pointer;transition:transform .15s}
+#map .pin circle{stroke:#fff;stroke-width:2}
+#map .pin:hover circle,#map .pin.on circle{stroke:var(--ink);stroke-width:3}
+#map .pin text{font:700 10px "DM Sans";fill:#fff;pointer-events:none}
+#map .home text{font-size:20px}
+#map .cl{font:700 13px Fraunces,serif;fill:rgba(31,42,36,.35);letter-spacing:.1em}
+.maptip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;padding:6px 9px;border-radius:10px;opacity:0;transform:translate(-50%,-120%);white-space:nowrap;transition:opacity .12s}
+.maplist{max-height:640px;overflow:auto;padding-right:4px}
+.kmstat{background:linear-gradient(135deg,#fff3e6,#ffe7d6);border:2px solid var(--ink);border-radius:16px;padding:12px 14px;margin-bottom:12px;box-shadow:0 3px 0 var(--ink)}
+.kmstat b{font-family:Fraunces,serif;font-size:24px;display:block}
+.lrow{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;width:100%;border:0;background:none;text-align:left;padding:6px 8px;border-radius:12px}
+.lrow:hover,.lrow.on{background:#f3eee3}
+.lrow .dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700}
+.lrow .nm{font-weight:700;font-size:14px;line-height:1.2}
+.lrow .nm small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.lrow .km{font-family:Fraunces,serif;font-weight:800;font-size:15px;white-space:nowrap}
+@media (max-width:820px){.mapwrap{grid-template-columns:1fr}}
+.card.soon{outline:3px dashed var(--orange);outline-offset:-3px}
+.countdown{background:linear-gradient(135deg,#ffe3cf,#fff3e6);border:2px solid var(--ink);border-radius:14px;padding:10px 12px;box-shadow:0 3px 0 var(--ink);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.countdown b{font-family:Fraunces,serif;font-size:22px}
+.stand{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.stand .lbl{font-size:11px;color:var(--muted);width:100%}
+.club{display:inline-flex;align-items:center;gap:5px;background:#f3f5f2;border-radius:999px;padding:3px 9px 3px 3px;font-size:12px;font-weight:700}
+.club .bd{width:20px;height:20px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.2)}
+.club .bd.ajax{background:linear-gradient(90deg,#fff 0 34%,#d2122e 34% 66%,#fff 66%)}
+.club .bd.fey{background:linear-gradient(90deg,#e30613 0 50%,#fff 50%)}
+.club .bd.ado{background:linear-gradient(90deg,#ffd200 0 50%,#00843d 50%)}
+.club.out{opacity:.55;font-weight:400}
+.lastmee{margin-top:6px;font-size:13px;background:#fff3e6;border-radius:10px;padding:7px 12px;color:#7a3a12}
+.lastmee .lastp{text-decoration:underline dotted}
+.spl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.spcard{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,#1db954,#168d40);color:#fff;text-decoration:none;box-shadow:0 3px 0 #0f6b30;transition:transform .15s}
+.spcard:hover{transform:translateY(-2px)}
+.spcard b{display:block;font-size:15px}.spcard small{display:block;font-size:12px;opacity:.85}
+.spic{flex:none;width:36px;height:36px;border-radius:50%;background:#000;display:grid;place-items:center;font-size:14px}
+.spcard .go{margin-left:auto;font-size:16px}
+/* toen */
+.then{border:2px dashed #e4dccb;border-radius:14px;padding:10px 12px;display:grid;gap:8px;font-size:13px;background:#fffdf8}
+.then .h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;display:flex;justify-content:space-between}
+.wx{display:flex;gap:6px}
+.wx .d{flex:1;text-align:center;background:#eef6fb;border-radius:10px;padding:5px 2px;line-height:1.15}
+.wx .d b{display:block;font-size:20px}
+.wx .d small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase}
+.wxs{color:var(--muted);font-size:12px}
+.hit{display:flex;gap:9px;align-items:center;text-decoration:none;color:inherit;background:#f6efff;border-radius:10px;padding:6px 9px}
+.hit .n1{flex:none;width:30px;height:30px;border-radius:50%;background:#7a52c7;color:#fff;font-weight:800;display:grid;place-items:center;font-size:12px}
+.hit b{display:block}
+.news summary{cursor:pointer;font-weight:700;list-style:none}
+.news summary::-webkit-details-marker{display:none}
+.news summary::before{content:'📰 ';}
+.news ul{margin:6px 0 0;padding-left:18px;display:grid;gap:4px}
+.news a{color:var(--orange)}
+/* ranking */
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:14px;padding:10px 0 0;min-height:250px}
+.pod{display:flex;flex-direction:column;align-items:center;gap:6px;width:130px;border:0;background:none;padding:0}
+.pod .medal{font-size:26px;animation:pop .6s cubic-bezier(.2,1.6,.4,1) both}
+.pod .nm{font-weight:700;text-align:center;font-size:14px}
+.pod .n{font-family:Fraunces,serif;font-size:13px;color:var(--muted)}
+.pod .block{width:100%;border-radius:14px 14px 4px 4px;display:grid;place-items:start center;padding-top:10px;color:#fff;font-family:Fraunces,serif;font-weight:800;font-size:30px;transform-origin:bottom;animation:grow .9s cubic-bezier(.2,1,.3,1) both}
+.pod.p1 .block{height:120px;background:linear-gradient(#f4b942,#d99a1c)}
+.pod.p2 .block{height:88px;background:linear-gradient(#b9c2c9,#8f9aa3);animation-delay:.15s}
+.pod.p3 .block{height:66px;background:linear-gradient(#d99a6c,#b06f43);animation-delay:.3s}
+.pod .av{width:64px;height:64px;font-size:21px}
+.pod.p1 .av{width:78px;height:78px;outline:3px solid var(--sun);outline-offset:3px}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.rlist{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.rrow{display:grid;grid-template-columns:34px 34px 150px 1fr 54px;align-items:center;gap:10px;border:0;background:none;padding:4px 6px;border-radius:12px;text-align:left}
+.rrow:hover{background:#f3eee3}
+.rrow.on{background:#fff1e6}
+.rrow .pos{font-family:Fraunces,serif;font-weight:800;color:var(--muted);text-align:right}
+.rrow .nm{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rrow .track{display:block;height:14px;background:#efe9dc;border-radius:99px;overflow:hidden}
+.rrow .fill{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green2),#58a983);width:0;transition:width 1s cubic-bezier(.2,1,.3,1)}
+.rrow.kid .fill{background:linear-gradient(90deg,var(--orange),#f3a06f)}
+.rrow .n{font-family:Fraunces,serif;font-weight:800;text-align:right}
+.rrow .n small{font-family:"DM Sans";font-weight:400;color:var(--muted);font-size:11px}
+@media (max-width:600px){.rrow{grid-template-columns:26px 30px 90px 1fr 44px;gap:6px}.pod{width:96px}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes zoomIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+/* scene effects */
+.fx-rise{animation:rise 1.8s ease-in infinite}
+@keyframes rise{0%{top:var(--y);opacity:0;transform:translate(-50%,-50%) scale(.6)}15%{opacity:1}100%{top:calc(var(--y) - 45%);opacity:0;transform:translate(-50%,-50%) scale(1.2)}}
+.fx-rain{animation:rain 1.6s linear infinite}
+@keyframes rain{0%{top:-12%;opacity:1}100%{top:105%;opacity:1}}
+.fx-confetti{animation:confetti 2.2s linear infinite}
+@keyframes confetti{0%{top:-10%;transform:translate(-50%,-50%) rotate(0)}100%{top:105%;transform:translate(-50%,-50%) rotate(720deg)}}
+.fx-walk{animation:walk 2.2s ease-out both}
+.fx-walk>span{animation:bob .35s ease-in-out infinite alternate}
+@keyframes walk{0%{left:-12%}100%{left:var(--x)}}
+@keyframes bob{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-8px) rotate(4deg)}}
+.fx-drive{animation:drive 3s linear infinite}
+@keyframes drive{0%{left:-15%}100%{left:115%}}
+.fx-fly{animation:fly 2.6s linear infinite}
+@keyframes fly{0%{left:115%}100%{left:-15%}}
+.fx-crawl{animation:crawl 3.4s linear infinite}
+.fx-crawl>span{animation:wig .18s linear infinite alternate}
+@keyframes crawl{0%{left:-8%}100%{left:108%}}
+@keyframes wig{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}
+.fx-bounce{animation:bounce .8s cubic-bezier(.3,0,.7,1) infinite alternate}
+@keyframes bounce{from{transform:translate(-50%,-50%)}to{transform:translate(-50%,-110%)}}
+.fx-shake{animation:shake .25s linear infinite}
+@keyframes shake{0%,100%{transform:translate(-50%,-50%) rotate(0)}25%{transform:translate(-52%,-50%) rotate(-7deg)}75%{transform:translate(-48%,-50%) rotate(7deg)}}
+.fx-spin{animation:spin 1.4s linear infinite}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.fx-pop{animation:pop .7s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(0)}to{transform:translate(-50%,-50%) scale(1)}}
+.fx-pulse{animation:pulse 1s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:translate(-50%,-50%) scale(.92)}to{transform:translate(-50%,-50%) scale(1.15)}}
+.fx-float{animation:float 2.4s ease-in-out infinite alternate}
+@keyframes float{from{transform:translate(-50%,-40%)}to{transform:translate(-50%,-62%)}}
+.fx-wobble{animation:wobble 1.6s ease-in-out infinite alternate}
+@keyframes wobble{from{transform:translate(-50%,-50%) rotate(-14deg)}to{transform:translate(-50%,-50%) rotate(14deg)}}
+.fx-arc{animation:arc 1.6s ease-in-out infinite}
+@keyframes arc{0%{left:12%;top:70%;transform:translate(-50%,-50%) rotate(0)}50%{left:50%;top:12%}100%{left:88%;top:70%;transform:translate(-50%,-50%) rotate(540deg)}}
+.fx-fade{animation:fade 2s ease-in-out infinite alternate}
+@keyframes fade{from{opacity:.05}to{opacity:.9}}
+.fx-zoom{animation:zoom 1.1s ease-out both}
+@keyframes zoom{from{transform:translate(-50%,-50%) scale(3);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.e,.e>span{animation-duration:0s!important;animation-iteration-count:1!important}}
+@media (max-width:600px){.wrap{padding:0 12px}.grid{grid-template-columns:1fr}.timeline small{display:none}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">🏡</div>
+      <div>
+        <h1>FD-Weekend-<span>Sigt</span></h1>
+        <p class="tag">Alle koeien uit de ouwe sloot, gewoon op een rijtje....</p>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+    <div class="ph"><h2>Wie ben jij?</h2><span class="hint">Klik op je avatar om je eigen weekenden te zien</span></div>
+    <div class="people" id="people"></div>
+    <div class="profile" id="profile"></div>
+  </section>
+
+  <section class="panel" id="rank">
+    <div class="ph"><h2>🏆 Ranking the FD-ers</h2>
+      <div class="seg" id="rKind" style="min-width:260px"><button data-r="adult" class="on">🍻 Volwassenen</button><button data-r="kid">🧒 Kids</button><button data-r="all">🌈 Iedereen</button></div>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div class="rlist" id="rlist"></div>
+    <button class="ghost" id="rMore" style="margin-top:10px"></button>
+  </section>
+
+  <section class="panel" id="kaart">
+    <div class="ph"><h2>🗺️ Waar zijn we geweest?</h2>
+      <label class="f" style="flex-direction:row;align-items:center;gap:8px">Vertrek vanuit <select id="fromTown"></select></label>
+    </div>
+    <div class="mapwrap">
+      <div class="mapbox"><svg id="map" role="img" aria-label="Kaart van de Benelux met alle FD-locaties"></svg><div class="maptip" id="maptip"></div></div>
+      <div class="maplist">
+        <div class="kmstat" id="kmstat"></div>
+        <div id="locList"></div>
+        <p class="hint" style="margin-top:8px">km = geschatte rijafstand (hemelsbreed × 1,25), enkele reis. Klik op een plek om alleen die weekenden te zien.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="spotify">
+    <div class="ph"><h2>🎧 FD-weekend weg Spotify playlists</h2><span class="hint">Opent in Spotify</span></div>
+    <div class="spl">
+      <a class="spcard" href="https://open.spotify.com/playlist/1VUWjrHHVWd6cNDCpiYAMO" target="_blank" rel="noopener"><span class="spic">▶</span><span><b>FD all the way</b><small>van René van Loenen · 212 nummers</small></span><span class="go">↗</span></a>
+      <a class="spcard" href="https://open.spotify.com/playlist/7qlS5A3Gkp8KkrM9Mz3bz3" target="_blank" rel="noopener"><span class="spic">▶</span><span><b>Niks voor Appel</b><small>van pmingaar</small></span><span class="go">↗</span></a>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph"><h2>Filters</h2><button class="ghost" id="reset">Alles wissen</button></div>
+    <div class="filters">
+      <label class="f">Jaar<select id="fYear"></select></label>
+      <label class="f">Editie<select id="fEd"></select></label>
+      <label class="f">Soort weekend
+        <div class="seg" id="fKids"><button data-v="all" class="on">🌈 Alle</button><button data-v="adult">🍻 Volwassenen</button><button data-v="kids">👨‍👩‍👧 Met kids</button></div>
+      </label>
+    </div>
+    <div class="timeline" id="timeline"></div>
+    <div class="legend"><span>Volwassenenweekend</span><span class="k">Met kids</span></div>
+    <div class="ph" style="margin:16px 0 0"><h2 style="font-size:16px">Locatie</h2></div>
+    <div class="locs" id="locs"></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="count" id="count"></div>
+    <button class="ghost" id="sort">↓ Nieuwste eerst</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="mbox">
+    <div class="mhead"><div><small id="mSub"></small><h3 id="mTitle"></h3></div><button class="x" id="mClose" aria-label="Sluiten">×</button></div>
+    <div class="stage day" id="stage"><div class="ground"></div><div class="beatnr" id="beatnr"></div><div class="caption" id="caption"></div></div>
+    <div class="mfoot">
+      <button class="btn alt" id="mPrev">← Vorige</button>
+      <button class="btn" id="mReplay">↻ Opnieuw</button>
+      <button class="btn alt" id="mNext">Volgende →</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="gmodal" role="dialog" aria-modal="true">
+  <div class="mbox" style="max-width:900px">
+    <div class="mhead"><div><small id="gSub"></small><h3 id="gTitle">Fotocollage</h3></div><div style="display:flex;gap:8px;align-items:center"><button class="x" id="gClose" aria-label="Sluiten">×</button></div></div>
+    <div class="gal" id="gal"></div>
+  </div>
+</div>
+
+<script>
+const DATA = /*DATA*/null;
+const P = DATA.people, W = DATA.weekends;
+const byId = Object.fromEntries(P.map(p=>[p.id,p]));
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const slug = s=>String(s||'').normalize('NFKD').replace(/[^\w]+/g,'-').replace(/^-|-$/g,'').toLowerCase()||'x';
+const TODAY=new Date().toISOString().slice(0,10);
+W.forEach((w,i)=>{w.i=i;w.upcoming=!!(w.date&&w.date>TODAY); w.lk=slug((w.loc||'')+'-'+(w.place||''));});
+
+/* shared uploads (avatars + photos) */
+const avatarUrl={}, photoUrl={}, albumUrl={}, photoSrc={}, gallery={};
+let assetsApi=null, dbApi=null, canEditShared=false;
+const okUrl=u=>/^https?:\/\/[^\s<>"]+$/i.test(String(u||'').trim());
+
+/* ---------- helpers ---------- */
+function hash(s){let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
+function rng(seed){let a=seed||1;return()=>{a^=a<<13;a^=a>>>17;a^=a<<5;return((a>>>0)%10000)/10000}}
+function initials(p){const parts=p.full.replace(/\(.*\)/,'').trim().split(/\s+/);return (parts[0][0]+(parts.length>1?parts[parts.length-1][0]:(parts[0][1]||''))).toUpperCase()}
+function avatar(p,cls=''){
+  const hue=hash(p.id)%360, url=avatarUrl[p.id];
+  const inner=url?`<img src="${esc(url)}" alt="">`:esc(initials(p));
+  return `<div class="av ${p.kid?'kid':''} ${cls}" style="background:hsl(${hue} 45% 45%)" title="${esc(p.full)}">${inner}</div>`;
+}
+function attended(p){return W.filter(w=>!(w.cancelled||w.upcoming) && w.att[p.id])}
+
+/* ---------- house illustrations ---------- */
+function houseType(w){
+  const s=((w.place||'')+' '+(w.loc||'')).toLowerCase();
+  if(w.cancelled) return 'cancel';
+  if(s.includes('boot')) return 'boat';
+  if(s.includes('chateau')||s.includes('kasteel')) return 'castle';
+  if(s.includes('lodge')) return 'lodge';
+  if(s.includes('stal')) return 'camp';
+  if(/park|landal|weerterbergen|katjeskelder|krim|oldebroek/.test(s)) return 'park';
+  return 'farm';
+}
+function houseSVG(w){
+  const r=rng(hash(w.lk+w.year)), t=houseType(w);
+  const pick=a=>a[Math.floor(r()*a.length)];
+  const wall=pick(['#f1e4cc','#e9d3b4','#d9c2a3','#f4efe4','#c9a27a','#b5523b']);
+  const roof=pick(['#7a3b2e','#3d4a3f','#5a3a2a','#2f3b4a','#8a5a2b']);
+  const door=pick(['#2f5d4a','#7a2f2f','#2f4a6d','#5a3d2a']);
+  const sky = w.kids?'#bfe6f5':'#cfe1ee';
+  let trees='';
+  for(let i=0;i<5;i++){const x=Math.round(r()*400),h=40+r()*40,c=pick(['#3f7a4a','#2f6a3e','#5a8f4e']);trees+=`<rect x="${x-3}" y="${190-h*0.3}" width="6" height="${h*0.3}" fill="#5a3d2a"/><circle cx="${x}" cy="${190-h*0.45}" r="${h*0.32}" fill="${c}"/>`}
+  const sun=`<circle cx="${330+r()*40}" cy="${35+r()*15}" r="18" fill="#f8d36b"/>`;
+  const cloud=x=>`<g fill="#fff" opacity=".9"><ellipse cx="${x}" cy="40" rx="26" ry="10"/><ellipse cx="${x+18}" cy="34" rx="16" ry="10"/></g>`;
+  let body='';
+  if(t==='boat'){
+    return `<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="${sky}"/>${sun}${cloud(80)}<rect y="150" width="400" height="70" fill="#3d8cc4"/><path d="M0 155 Q25 148 50 155 T100 155 T150 155 T200 155 T250 155 T300 155 T350 155 T400 155" stroke="#bfe3f7" stroke-width="3" fill="none"/><path d="M110 150 L290 150 L270 178 L130 178 Z" fill="#6b3a24"/><rect x="198" y="40" width="5" height="112" fill="#4a2f20"/><path d="M203 44 L268 140 L203 140 Z" fill="#fff"/><path d="M198 50 L140 140 L198 140 Z" fill="#f3efe6"/><path d="M203 40 l22 6 l-22 6z" fill="#e8743b"/></svg>`;
+  }
+  if(t==='castle'){
+    body=`<rect x="120" y="90" width="160" height="100" fill="${wall}"/>${[120,155,190,225,260].map(x=>`<rect x="${x}" y="80" width="20" height="14" fill="${wall}"/>`).join('')}<rect x="90" y="60" width="44" height="130" fill="${wall}"/><path d="M84 62 L112 20 L140 62Z" fill="${roof}"/><rect x="266" y="60" width="44" height="130" fill="${wall}"/><path d="M260 62 L288 20 L316 62Z" fill="${roof}"/><path d="M182 190 v-38 a18 18 0 0 1 36 0 v38z" fill="${door}"/>${[150,240,104,280].map(x=>`<rect x="${x}" y="110" width="14" height="20" rx="7" fill="#3a4a5a"/>`).join('')}<rect y="190" width="400" height="30" fill="#3d8cc4"/>`;
+  } else if(t==='lodge'){
+    body=`<rect y="150" width="400" height="70" fill="#ecd9a8"/>${[60,170,280].map(x=>`<g><rect x="${x}" y="105" width="80" height="55" fill="#8a6a4a"/><path d="M${x-6} 108 L${x+40} 78 L${x+86} 108Z" fill="#3d4a3f"/><rect x="${x+10}" y="118" width="30" height="24" fill="#bfe3f7"/><rect x="${x+50}" y="125" width="18" height="35" fill="${door}"/></g>`).join('')}<path d="M0 150 Q60 120 120 150 Q200 125 260 150 Q330 128 400 150" fill="#d8c48a"/>`;
+  } else if(t==='camp'){
+    body=`${trees}<path d="M80 190 L150 100 L220 190Z" fill="#e8743b"/><path d="M150 100 L150 190 L130 190Z" fill="#b9541f"/><path d="M230 190 L290 115 L350 190Z" fill="#2f7d5f"/><path d="M290 115 L290 190 L275 190Z" fill="#1f5c45"/><g transform="translate(40 170)"><path d="M0 20 l12 -20 l12 20" fill="#7a3b2e"/><path d="M6 14 q6 -14 12 0" fill="#f4b942"/></g>`;
+  } else if(t==='park'){
+    body=`${trees}${[30,150,270].map((x,i)=>`<g><rect x="${x}" y="${130+i%2*6}" width="100" height="56" fill="${i%2?wall:'#e9e2d2'}"/><path d="M${x-8} ${134+i%2*6} L${x+50} ${100+i%2*6} L${x+108} ${134+i%2*6}Z" fill="${roof}"/><rect x="${x+12}" y="${146+i%2*6}" width="26" height="20" fill="#bfe3f7"/><rect x="${x+62}" y="${150+i%2*6}" width="20" height="36" fill="${door}"/></g>`).join('')}`;
+  } else if(t==='cancel'){
+    return `<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#d9d6cf"/><rect x="140" y="95" width="120" height="85" fill="#bdb7aa"/><path d="M128 100 L200 50 L272 100Z" fill="#8f877a"/><rect x="185" y="135" width="30" height="45" fill="#7c766b"/><g stroke="#d9577a" stroke-width="12" stroke-linecap="round"><path d="M110 40 L290 200"/></g><text x="200" y="212" font-family="DM Sans" font-size="15" text-anchor="middle" fill="#555">🦠 geannuleerd</text></svg>`;
+  } else {
+    const wide=r()>.5;
+    const W_=wide?220:170, x0=200-W_/2;
+    body=`${trees}<rect x="${x0}" y="105" width="${W_}" height="85" fill="${wall}"/><path d="M${x0-14} 110 L200 ${wide?40:35} L${x0+W_+14} 110Z" fill="${roof}"/>${wide?`<path d="M${x0+20} 110 L${x0+40} 92 L${x0+60} 110Z" fill="${roof}"/>`:''}<rect x="${x0+20}" y="125" width="34" height="28" fill="#bfe3f7" stroke="#fff" stroke-width="3"/><rect x="${x0+W_-54}" y="125" width="34" height="28" fill="#bfe3f7" stroke="#fff" stroke-width="3"/><rect x="${188}" y="140" width="24" height="50" fill="${door}"/><path d="M188 140 a12 12 0 0 1 24 0" fill="${door}"/>${r()>.5?`<rect x="${x0+W_-40}" y="58" width="14" height="30" fill="#7a3b2e"/>`:''}${w.kids?`<g transform="translate(${x0+W_+20} 150)"><path d="M0 40 L15 0 L30 40" stroke="#5a3d2a" stroke-width="4" fill="none"/><line x1="15" y1="0" x2="15" y2="28" stroke="#5a3d2a" stroke-width="2"/><rect x="9" y="28" width="12" height="4" fill="#e8743b"/></g>`:''}`;
+  }
+  return `<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice"><rect width="400" height="220" fill="${sky}"/>${sun}${cloud(60+r()*60)}${cloud(200+r()*60)}<rect y="185" width="400" height="35" fill="#7bbf6a"/>${body}</svg>`;
+}
+
+/* ---------- anecdote scenes ----------
+   layer: [emoji, effect, count, x%, y%, size%, delay(s)]   */
+const SC = {
+ 1:[{t:'Kliko in de fik! 🔥',bg:'night',L:[['🗑️','shake',1,50,64,22],['🔥','rise',8,50,58,12],['💨','rise',3,50,40,10,.6],['🌙','float',1,82,18,10]]},
+    {t:'Alles met het openbaar vervoer',bg:'day',L:[['🚆','drive',1,0,62,20],['🚌','drive',1,0,78,14,1.4],['🎒','bounce',1,80,30,8]]}],
+ 2:[{t:'Bokworsten!',bg:'day',L:[['🌭','rain',10,50,0,9],['😋','pulse',1,50,52,22]]}],
+ 3:[{t:'Bri mee!',bg:'party',L:[['🙋‍♀️','walk',1,50,60,24],['🎉','confetti',12,50,0,7],['🐟','float',1,82,28,9]]}],
+ 4:[{t:'Afstandbedieningen…',bg:'indoor',L:[['📺','shake',1,50,48,26],['🕹️','fly',3,50,30,9],['🔋','rain',5,50,0,7],['🤷','pop',1,20,62,13,.8]]}],
+ 5:[{t:'Leorah mee!',bg:'party',L:[['🙋‍♀️','walk',1,50,60,24],['🎉','confetti',12,50,0,7],['🌲','float',2,12,55,12]]}],
+ 6:[{t:'De schotel van Henk',bg:'day',L:[['📡','wobble',1,50,52,26],['📶','pulse',1,68,28,10]]},
+    {t:'…en heel veel regen',bg:'rain',L:[['☁️','float',3,50,14,16],['💧','rain',18,50,0,5],['☔','bounce',1,50,66,18]]}],
+ 7:[{t:'Ananas gooien!',bg:'day',L:[['🍍','arc',3,50,50,13],['💪','pulse',1,10,70,12],['🙌','pulse',1,90,70,12]]}],
+ 8:[{t:'Wendy op de hooizolder',bg:'indoor',L:[['🌾','float',5,50,70,10],['🛏️','pop',1,50,62,16],['😴','float',1,50,40,12,.6]]},
+    {t:'Weerwolven 🐺',bg:'night',L:[['🌕','pulse',1,78,20,16],['🐺','shake',1,40,58,22],['👀','fade',3,50,40,8]]},
+    {t:'Charlotte & Sloper wél betaald',bg:'day',L:[['💶','rain',10,50,0,8],['✅','pop',1,50,52,22,.4]]}],
+ 9:[{t:'Mark belt de Chinees',bg:'indoor',L:[['☎️','shake',1,30,52,20],['🥡','fly',2,50,40,12],['🥢','spin',1,72,58,12]]},
+    {t:'Alice in d\'r uitgescheurde broek',bg:'day',L:[['👖','shake',1,50,50,24],['💥','pop',1,58,58,12,.5],['🙈','pop',1,28,40,13,1]]}],
+ 10:[{t:'2e schipper kan niet zeilen',bg:'water',L:[['⛵','wobble',1,50,56,26],['🌊','drive',3,0,72,12],['😬','bounce',1,78,26,12],['🧭','spin',1,20,26,10]]}],
+ 11:[{t:'Bubbelbad Wendy',bg:'indoor',L:[['🛁','pulse',1,50,60,28],['🫧','rise',14,50,56,7],['🦆','float',1,62,52,9]]}],
+ 12:[{t:'Avondvullende spelshow',bg:'party',L:[['🎤','pulse',1,50,52,22],['⭐','spin',5,50,25,8],['🎲','bounce',2,25,65,10],['🏆','pop',1,78,55,14,1]]}],
+ 13:[{t:'Kolf Annet',bg:'indoor',L:[['🍼','pulse',1,50,52,24],['💛','rise',5,50,50,7]]}],
+ 14:[{t:'Deurvoetbal Martijn & Annet',bg:'indoor',L:[['🚪','shake',1,80,52,26],['⚽','arc',1,50,50,11]]},
+     {t:'Kindjes Mingaars ziek',bg:'indoor',L:[['🤒','pulse',2,50,52,16],['🌡️','float',1,78,40,12]]},
+     {t:'Hittegolf!',bg:'hot',L:[['☀️','spin',1,50,24,26],['🥵','shake',1,50,62,18],['💦','rise',6,50,60,7]]}],
+ 15:[{t:'Lars ook mee!',bg:'party',L:[['🧒','walk',1,50,62,22],['🎉','confetti',12,50,0,7],['⛵','float',1,82,40,12]]}],
+ 18:[{t:'Babyfoon “Ons Ans”',bg:'night',L:[['📻','shake',1,50,54,22],['🔊','pulse',1,72,40,12],['👶','pop',1,28,46,14,.6],['〰️','fade',3,50,28,8]]}],
+ 21:[{t:'Roz stiekem zwanger',bg:'party',L:[['🤫','pop',1,35,52,22],['🤰','pop',1,65,52,22,1],['💕','rise',8,65,50,7,1.2]]}],
+ 24:[{t:'2e hands kleding kopen',bg:'day',L:[['👕','rain',4,50,0,9],['👗','rain',4,50,0,9,.4],['👖','rain',3,50,0,9,.8],['🛍️','bounce',1,50,66,18]]}],
+ 25:[{t:'De rookmelder!',bg:'indoor',L:[['🚨','shake',1,50,20,18],['💨','rise',8,50,70,10],['🙉','pop',2,50,60,14,.5]]}],
+ 27:[{t:'Bedbugs…',bg:'indoor',L:[['🛏️','shake',1,50,58,28],['🪲','crawl',6,0,70,8],['😱','pop',1,80,30,14,.8]]}],
+ 28:[{t:'AH-bus vast op de dijk',bg:'day',L:[['🚚','wobble',1,50,58,26],['💨','rise',5,30,62,8],['🛒','fly',3,50,30,8],['🙄','pop',1,82,30,12,1]]}],
+ 29:[{t:'Zieke Vic die toch kwam',bg:'day',L:[['🤧','walk',1,50,58,24],['🤒','pop',1,72,30,12,1.4],['💪','pop',1,30,30,12,1.8]]}],
+ 31:[{t:'Zwemmen in de nacht',bg:'night',L:[['🌙','float',1,80,18,14],['🏊','drive',2,0,66,14],['✨','fade',6,50,25,6]]},
+     {t:'Pompoenen!',bg:'day',L:[['🎃','bounce',5,50,64,12]]}],
+ 32:[{t:'Servies gemingeld 😉',bg:'indoor',L:[['🍽️','spin',2,40,45,14],['☕','arc',1,50,50,10],['🥣','spin',1,64,58,12],['🍴','shake',2,50,30,9]]}],
+ 35:[{t:'Henk op de bank slapen',bg:'night',L:[['🛋️','pulse',1,50,62,28],['💤','rise',6,56,48,9],['🌙','float',1,82,18,12]]}],
+ 36:[{t:'Mieren!',bg:'day',L:[['🐜','crawl',10,0,72,7]]},
+     {t:'Fons op de bank',bg:'indoor',L:[['🛋️','pulse',1,50,62,26],['💤','rise',4,56,46,8]]},
+     {t:'Tim ziek',bg:'indoor',L:[['🤒','pulse',1,50,52,24],['🌡️','float',1,74,40,12]]},
+     {t:'Alice naar het NK hockey',bg:'day',L:[['🏑','wobble',1,40,56,22],['🏆','pop',1,70,40,16,.7],['🚗','drive',1,0,78,12]]}],
+ 37:[{t:'Hitster!',bg:'party',L:[['🎵','rise',8,50,70,9],['🎶','rise',6,40,70,9,.5],['🎧','pulse',1,50,48,20]]},
+     {t:'De lift met Henk & Martijn',bg:'indoor',L:[['🛗','shake',1,50,54,26],['😰','pop',2,50,30,10,.6],['🔧','spin',1,80,60,10]]}],
+ 39:[{t:'Anneke en Suus afwezig?',bg:'day',L:[['❓','pop',3,50,40,14],['👻','fade',2,50,60,16],['🔍','wobble',1,80,64,14]]}],
+ 40:[{t:'Heet!!',bg:'hot',L:[['☀️','spin',1,50,22,30],['🌡️','pulse',1,25,58,18],['🥵','shake',1,70,60,20],['💦','rise',6,70,58,7]]},
+     {t:'Te warm voor paintball → shoppen in Nijmegen',bg:'day',L:[['🛍️','bounce',3,50,62,13],['🔫','fade',1,15,40,10]]}]
+};
+function sceneFor(w){
+  if(SC[w.ed]) return SC[w.ed];
+  return [{t:w.anek,bg:'party',L:[['✨','confetti',10,50,0,7],['📖','pop',1,50,52,20]]}];
+}
+
+/* ---------- state ---------- */
+const st={person:null,year:'',ed:'',kids:'all',loc:'',asc:false};
+try{const s=JSON.parse(localStorage.getItem('fdws')||'{}');if(s.person&&byId[s.person])st.person=s.person}catch(e){}
+function save(){try{localStorage.setItem('fdws',JSON.stringify({person:st.person}))}catch(e){}}
+
+function filtered(){
+  return W.filter(w=>{
+    if(st.person && !w.att[st.person]) return false;
+    if(st.year && String(w.year)!==st.year) return false;
+    if(st.ed && String(w.i)!==st.ed) return false;
+    if(st.kids==='kids' && !w.kids) return false;
+    if(st.kids==='adult' && (w.kids||w.cancelled)) return false;
+    if(st.loc && w.place!==st.loc) return false;
+    return true;
+  }).sort((a,b)=>st.asc? a.i-b.i : b.i-a.i);
+}
+
+/* ---------- render ---------- */
+function renderStats(){
+  const live=W.filter(w=>!(w.cancelled||w.upcoming));
+  const locs=new Set(live.map(w=>w.lk)).size;
+  const years=new Set(live.map(w=>w.year));
+  $('#stats').innerHTML=[
+    [live.length,'weekenden'],[years.size,'jaar'],[locs,'locaties'],[P.length,'deelnemers'],[live.filter(w=>w.anek).length,'anekdotes']
+  ].map(([n,l])=>`<div class="stat"><b>${n}</b><small>${l}</small></div>`).join('');
+}
+function renderPeople(){
+  const btn=p=>`<button class="pbtn ${st.person===p.id?'on':''} ${st.person&&st.person!==p.id?'dim':''}" data-p="${p.id}">${avatar(p)}<span class="nm">${esc(p.name)}</span></button>`;
+  const sorted=a=>a.slice().sort((x,y)=>attended(y).length-attended(x).length);
+  $('#people').innerHTML=`<div class="pgroup">${sorted(P.filter(p=>!p.kid)).map(btn).join('')}</div><div class="psep"></div><div class="pgroup">${sorted(P.filter(p=>p.kid)).map(btn).join('')}</div>`;
+  const pr=$('#profile');
+  if(!st.person){pr.className='profile';pr.innerHTML='';return}
+  const p=byId[st.person], ws=attended(p), half=ws.filter(w=>w.att[p.id]<1).length;
+  const cnt={}; ws.forEach(w=>cnt[w.place]=(cnt[w.place]||0)+1);
+  const fav=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
+  const first=p.name.split(' ')[0];
+  const org=W.filter(w=>w.org && new RegExp('\\b'+first,'i').test(w.org)).length;
+  pr.className='profile show';
+  pr.innerHTML=`${avatar(p,'lg')}<div style="flex:1;min-width:220px"><h3>${esc(p.full)}</h3>
+    <div class="hint">${p.town?esc(p.town)+' · ':''}${p.kid?'Kids-crew':'Vaste kern'}${p.born?` · 🎂 ${new Date(p.born+'T12:00').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'})} (${ageOn(p.born,TODAY)} jaar)`:''}</div>
+    <div class="pfacts">
+      <span class="chip">🏡 <b>${ws.length}</b> weekenden${half?` (${half}× deels)`:''}</span>
+      ${ws.length?`<span class="chip">🥇 eerste keer <b>${ws[0].year}</b></span><span class="chip">🕒 laatst <b>${ws[ws.length-1].year}</b></span>`:''}
+      ${fav&&fav[1]>1?`<span class="chip">❤️ vaakst in <b>${esc(fav[0])}</b> (${fav[1]}×)</span>`:''}
+      ${org?`<span class="chip">📋 <b>${org}×</b> mede-organisator</span>`:''}
+    </div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="ghost" id="clearP">Toon iedereen</button></div>`;
+}
+function renderFilters(){
+  const years=[...new Set(W.map(w=>w.year))].sort((a,b)=>a-b);
+  $('#fYear').innerHTML=`<option value="">Alle jaren</option>`+years.map(y=>`<option ${String(y)===st.year?'selected':''}>${y}</option>`).join('');
+  $('#fEd').innerHTML=`<option value="">Alle edities</option>`+W.filter(w=>!st.year||String(w.year)===st.year).map(w=>`<option value="${w.i}" ${String(w.i)===st.ed?'selected':''}>${w.cancelled?'— ':'#'+w.ed+' · '}${w.year} · ${esc(w.place)}${w.kids?' 👶':''}</option>`).join('');
+  document.querySelectorAll('#fKids button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.kids));
+  const vis=new Set(filtered().map(w=>w.i));
+  $('#timeline').innerHTML=years.map(y=>{
+    const ws=W.filter(w=>w.year===y);
+    const any=ws.some(w=>vis.has(w.i));
+    return `<button class="yr ${String(y)===st.year?'on':''} ${any?'':'dim'}" data-y="${y}" title="${y}"><span class="bars">${ws.map(w=>`<span class="bar ${w.cancelled?'x':w.kids?'k':''}"></span>`).join('')}</span><small>'${String(y).slice(2)}</small></button>`;
+  }).join('');
+  const cnt={}; W.filter(w=>!(w.cancelled||w.upcoming)).forEach(w=>cnt[w.place]=(cnt[w.place]||0)+1);
+  $('#locs').innerHTML=Object.entries(cnt).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([l,n])=>`<button class="loc ${st.loc===l?'on':''}" data-l="${esc(l)}">📍 ${esc(l)}<i>${n}</i></button>`).join('');
+}
+const DAG=['vr','za','zo'],MND=['jan','feb','mrt','apr','mei','juni','juli','aug','sep','okt','nov','dec'];
+function wxIcon(c,r,sun,tmin){if(c>=71&&c<=77)return '❄️';if(c>=95)return '⛈️';if(r<1)return sun>10?'☀️':sun>5?'🌤️':'☁️';return r<5?'🌦️':'🌧️'}
+
+// laatste keer mee (niet voor de laatste 2 gehouden weekenden)
+const LASTMEE=(()=>{const held=W.map((w,i)=>i).filter(i=>!W[i].cancelled&&!(W[i].date&&W[i].date>TODAY)&&Object.keys(W[i].att||{}).length);
+  const skip=new Set(held.slice(-2));const last={};
+  held.forEach(i=>Object.keys(W[i].att).forEach(id=>{if(W[i].att[id]>0)last[id]=i}));
+  const by={};Object.entries(last).forEach(([id,i])=>{if(!skip.has(i))(by[i]=by[i]||[]).push(id)});return by;})();
+
+function ageOn(born,date){const b=new Date(born+'T12:00'),d=new Date(date+'T12:00');let a=d.getFullYear()-b.getFullYear();if(d.getMonth()<b.getMonth()||(d.getMonth()===b.getMonth()&&d.getDate()<b.getDate()))a--;return a;}
+function avgAgeHTML(w,ppl){if(!w.date)return '';const part=(arr,lbl)=>{const k=arr.filter(p=>p.born);if(!k.length)return '';const avg=k.reduce((s,p)=>s+ageOn(p.born,w.date),0)/k.length;return `<b>${avg.toFixed(1).replace('.',',')}</b> jr ${lbl}${k.length<arr.length?` <small class="hint">(${k.length} van ${arr.length} bekend)</small>`:''}`};
+  const a=part(ppl.filter(p=>!p.kid),'volwassenen'),k=part(ppl.filter(p=>p.kid),'kids');if(!a&&!k)return '';
+  return `<div class="row"><span class="k">🎂</span><span>Gem. leeftijd: ${[a,k].filter(Boolean).join(' · ')}</span></div>`;}
+function standHTML(w){const s=w.stand;if(!s)return '';
+  const C=[['ajax','Ajax'],['fey','Feyenoord'],['ado','ADO']];
+  const ch=C.map(([k,n])=>{const v=s[k];if(!v)return `<span class="club out" title="${n} speelde in ${s.season} niet in de Eredivisie"><span class="bd ${k}"></span>${n} · KKD</span>`;
+    return `<span class="club" title="${n}: ${v[0]}e${v[1]!=null?' met '+v[1]+' punten':''} na ${v[2]} wedstrijden"><span class="bd ${k}"></span>${n} #${v[0]}</span>`}).join('');
+  const n=Math.max(...['ajax','fey'].map(k=>s[k]?s[k][2]:0));
+  const dt=w.date?new Date(w.date+'T12:00').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'}):'';
+  const lbl=`Stand Eredivisie ${s.season} op ${dt} · na ${n} speelrondes`+(s.abort?' (competitie stilgelegd door corona)':s.final?' (laatste speelronde al gespeeld)':'');
+  return `<div class="stand"><span class="lbl">⚽ ${lbl}</span>${ch}</div>`;}
+function thenHTML(w){
+  if(!w.date)return '';
+  const d=new Date(w.date+'T12:00:00');const fr=new Date(d-864e5),zo=new Date(+d+864e5);const ds=(fr.getMonth()===zo.getMonth()?`${fr.getDate()}–${zo.getDate()} ${MND[zo.getMonth()]}`:`${fr.getDate()} ${MND[fr.getMonth()]} – ${zo.getDate()} ${MND[zo.getMonth()]}`)+' '+zo.getFullYear();const exact=w.datum&&/\d/.test(w.datum);
+  let wx='';
+  if(w.wx){const [mx,mn,rr,cc,sn]=w.wx;const avg=Math.round(mx.reduce((a,b)=>a+b,0)/3),rain=Math.round(rr.reduce((a,b)=>a+b,0)),sun=Math.round(sn.reduce((a,b)=>a+b,0));
+    wx=`<div class="wx">${mx.map((t,k)=>`<div class="d"><small>${DAG[k]}</small><b>${wxIcon(cc[k],rr[k],sn[k],mn[k])}</b>${Math.round(t)}°</div>`).join('')}</div>
+    <div class="wxs">Gemiddeld ${avg}° overdag · ${rain?rain+' mm regen':'droog'} · ${sun} uur zon${Math.max(...w.wx[5])>40?' · flinke wind 💨':''}</div>`}
+  const hit=w.top40?`<a class="hit" href="${esc(w.top40.url)}" target="_blank" rel="noopener"><span class="n1">#1</span><span><b>${esc(w.top40.t)}</b>${esc(w.top40.a)}</span></a>`:'';
+  const nw=w.news?`<details class="news"><summary>In het nieuws (${w.news.length})</summary><ul>${w.news.map(n=>`<li>${esc(n.t)}${n.u?` <a href="${esc(n.u)}" target="_blank" rel="noopener">bron ↗</a>`:''}</li>`).join('')}</ul><div class="wxs" style="margin-top:4px">Meer: <a href="${esc(w.newsSrc)}" target="_blank" rel="noopener">overzicht van die maand ↗</a></div></details>`:'';
+  return `<div class="then"><div class="h"><span>Dat weekend · ${ds}</span><span title="${exact?'Datum uit de sheet':'Volgens de sheet: '+esc(w.datum||'')}">${exact?'📅':'≈ '+esc(w.datum||'')}</span></div>${wx}${hit}${standHTML(w)}${nw}</div>`;
+}
+function renderGrid(){
+  const list=filtered();
+  const who=st.person?` met ${byId[st.person].name.split(' ')[0]}`:'';
+  $('#count').textContent=`${list.filter(w=>!(w.cancelled||w.upcoming)).length} weekend${list.length===1?'':'en'}${who}`;
+  $('#sort').textContent=st.asc?'↑ Oudste eerst':'↓ Nieuwste eerst';
+  if(!list.length){$('#grid').innerHTML=`<div class="empty">Geen weekenden gevonden met deze filters. <br><button class="ghost" id="reset2" style="margin-top:12px">Filters wissen</button></div>`;return}
+  $('#grid').innerHTML=list.map((w,k)=>{
+    const style=`style="animation-delay:${Math.min(k,12)*30}ms"`;
+    if(w.upcoming){const f=new Date(w.date+'T12:00:00');const days=Math.max(0,Math.ceil((f-new Date())/864e5)-1);
+      return `<article class="card soon" ${style}><div class="photo">${photoUrl[w.lk]?`<img src="${esc(photoUrl[w.lk])}" alt="" loading="lazy">`:houseSVG(w)}<span class="badge">Editie ${w.ed} · ${w.year}</span><span class="tag kids">🔜 binnenkort</span></div><div class="cb"><h3>${esc(w.loc||w.place)}</h3><div class="where">📍 ${esc(w.place)}${kmFor(w)?`<br>🚗 ± ${kmFor(w)} km vanaf ${esc(curTown())}`:''}</div><div class="countdown"><b>${days===0?'Dit weekend!':days===1?'Nog 1 dag':'Nog '+days+' dagen'}</b><span>${esc(w.datum||'')} ${w.year}</span></div>${w.org?`<div class="row"><span class="k">📋</span><span><b>Organisatie:</b> ${esc(w.org)}</span></div>`:''}${w.act?`<div class="row"><span class="k">🎯</span><span>${esc(w.act)}</span></div>`:''}<div class="noanek">Wie gaat er mee? De aanwezigheid volgt na het weekend.</div></div></article>`;}
+    if(w.cancelled) return `<article class="card cancel" ${style}><div class="photo">${houseSVG(w)}<span class="badge">${w.year}</span></div><div class="cb"><h3>Geannuleerd</h3><div class="where">Het volwassenenweekend van ${w.year} ging niet door vanwege corona.</div></div></article>`;
+    const ppl=Object.keys(w.att).map(id=>byId[id]).filter(Boolean).sort((a,b)=>a.kid-b.kid);
+    const photo=photoUrl[w.lk]?`<img src="${esc(photoUrl[w.lk])}" alt="${esc(w.loc||w.place)}">`:houseSVG(w);
+    const host = w.web? (()=>{try{return new URL(w.web).hostname.replace(/^www\./,'')}catch(e){return 'website'}})():'';
+    return `<article class="card" ${style}>
+      <div class="photo">${photo}
+        <span class="badge">Editie ${w.ed} · ${w.year}</span>
+        <span class="badge ${w.kids?'kids':'adult'}">${w.kids?'👨‍👩‍👧 met kids':'🍻 volwassenen'}</span>
+        ${photoUrl[w.lk]?(photoSrc[w.lk]?`<span class="credit">📷 ${esc(photoSrc[w.lk])}</span>`:''):'<span class="illus">illustratie</span>'}
+      </div>
+      <div class="cb">
+        <div><h3>${esc(w.loc||w.place)}</h3><div class="where">📍 ${esc(w.place)}${host?` · <a href="${esc(w.web)}" target="_blank" rel="noopener">${esc(host)} ↗</a>`:''}${kmFor(w)?`<br>🚗 ± ${kmFor(w)} km vanaf ${esc(curTown())}`:''}</div></div>
+        ${w.org?`<div class="row"><span class="k">📋</span><span><b>Organisatie:</b> ${esc(w.org)}</span></div>`:''}
+        ${w.act?`<div class="row"><span class="k">🎯</span><span>${esc(w.act)}</span></div>`:''}
+        <div class="row"><span class="k">👥</span><span><b>${ppl.filter(p=>!p.kid).length}</b> volwassenen${ppl.some(p=>p.kid)?`, <b>${ppl.filter(p=>p.kid).length}</b> kids`:''}</span></div>
+        ${avgAgeHTML(w,ppl)}
+        <div class="atts">${ppl.map(p=>`<span data-p="${p.id}">${avatar(p,'sm '+(w.att[p.id]<1?'half':'')+(st.person===p.id?' hl':''))}</span>`).join('')}</div>
+        ${(gallery[w.ed]||[]).length?`<div class="collage" data-gal="${w.ed}" title="Bekijk de fotocollage">${gallery[w.ed].slice(0,4).map(g=>`<img src="${esc(g.url)}" alt="" loading="lazy">`).join('')}${gallery[w.ed].length>4?`<span class="more">+${gallery[w.ed].length-4}</span>`:''}</div>`:''}
+        ${thenHTML(w)}
+        <div class="album" data-alb="${w.ed}">${albumUrl[w.ed]
+            ?`<a class="albtn" href="${esc(albumUrl[w.ed])}" target="_blank" rel="noopener">📸 Foto's van dit weekend ↗</a>`
+            :`<span class="albtn off">📸 Foto's volgen binnenkort</span>`}
+          </div>
+        ${w.anek?`<button class="anek" data-a="${w.i}"><span class="play">▶</span><span class="txt"><small>Anekdote</small>${esc(w.anek)}</span></button>`:`<div class="noanek">Nog geen anekdote.</div>`}${(()=>{const L=(LASTMEE[W.indexOf(w)]||[]).map(id=>byId[id]).filter(Boolean);return L.length?`<div class="lastmee">👋 <b>Voor het laatst mee:</b> ${L.map(p=>`<span data-p="${p.id}" class="lastp">${esc(p.name)}</span>`).join(', ')}</div>`:''})()}
+      </div></article>`;
+  }).join('');
+}
+const rk={kind:'adult',all:false};
+function score(p){return W.reduce((s,w)=>s+(w.cancelled?0:(w.att[p.id]||0)),0)}
+function renderRank(){
+  document.querySelectorAll('#rKind button').forEach(b=>b.classList.toggle('on',b.dataset.r===rk.kind));
+  const list=P.filter(p=>rk.kind==='all'||(rk.kind==='kid')===p.kid).map(p=>({p,s:score(p),n:attended(p).length}))
+    .sort((a,b)=>b.s-a.s||a.p.full.localeCompare(b.p.full));
+  // standard competition ranking (ties share a place)
+  list.forEach((x,i)=>x.pos=(i&&list[i-1].s===x.s)?list[i-1].pos:i+1);
+  const fmt=s=>String(s).replace('.',',');
+  const top=list.slice(0,3), order=[top[1],top[0],top[2]].filter(Boolean);
+  const medal={1:'🥇',2:'🥈',3:'🥉'};
+  $('#podium').innerHTML=order.map(x=>{const cls=x===top[0]?'p1':x===top[1]?'p2':'p3';return `<button class="pod ${cls}" data-p="${x.p.id}"><span class="medal">${medal[x.pos]||'🏅'}</span>${avatar(x.p)}<span class="nm">${esc(x.p.name)}</span><span class="n">${fmt(x.s)} weekenden</span><div class="block">${x.pos}</div></button>`}).join('');
+  const max=list[0]?list[0].s:1, rest=list.slice(3), shown=rk.all?rest:rest.slice(0,10);
+  const live=W.filter(w=>!(w.cancelled||w.upcoming)&&(rk.kind==='all'||(rk.kind==='kid')===w.kids||rk.kind==='adult')).length;
+  $('#rlist').innerHTML=shown.map(x=>`<button class="rrow ${x.p.kid?'kid':''} ${st.person===x.p.id?'on':''}" data-p="${x.p.id}"><span class="pos">${x.pos}</span>${avatar(x.p,'sm')}<span class="nm">${esc(x.p.full)}</span><span class="track"><span class="fill" data-w="${Math.max(3,x.s/max*100)}"></span></span><span class="n">${fmt(x.s)}${x.n!==x.s?` <small>(${x.n})</small>`:''}</span></button>`).join('');
+  $('#rMore').hidden=rest.length<=10;
+  $('#rMore').textContent=rk.all?'Toon minder':`Toon alle ${list.length} deelnemers`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('#rlist .fill').forEach(f=>f.style.width=f.dataset.w+'%')));
+}
+document.querySelectorAll('#rKind button').forEach(b=>b.onclick=()=>{rk.kind=b.dataset.r;rk.all=false;renderRank()});
+$('#rMore').onclick=()=>{rk.all=!rk.all;renderRank()};
+const MAP=/*MAP*/null;
+const LOCXY={'jehee-sr-putten':[52.259,5.607],'weerterbergen-weert':[51.22,5.75],'de-krim-texel':[53.15,4.86],'katjeskelder-oosterhout':[51.627,4.835],'ardennen':[50.3,5.5],'de-stal-drijber':[52.846,6.506],'epen':[50.776,5.912],'boerenstee-woudenberg':[52.10,5.39],'hofstede-hooybroeck-woudenberg':[52.07,5.44],'liniedijk-woudenberg':[52.065,5.40],'heemsdael-breskens':[51.396,3.55],'boot-monnickendam':[52.459,5.038],'koningsbed-groenekan':[52.137,5.155],'t-heerenhuijs-handel':[51.573,5.657],'rijnhoeve-kouderkerk-a-d-rijn':[52.133,4.60],'droompark-beekbergen-beekbergen':[52.137,6.002],'de-4-jaargetijden-kamerik':[52.11,4.89],'oldebroek-landal-t-loo':[52.44,5.92],'hunzepark-wenakker-gasselternijveen':[52.98,6.84],'t-bullekroffie-oudesluis':[52.84,4.80],'huntershof-diever':[52.855,6.32],'in-de-rozenhof-kedichem':[51.86,5.03],'t-borghuis-losser':[52.27,7.02],'chateau-giethoorn-giethoorn':[52.74,6.08],'sea-lodges-zandvoort':[52.37,4.53],'hoeve-mingels-banholt':[50.79,5.80],'maria-johanne-hoeve-noordeloos':[51.90,4.94],'larikshoeve-leusden':[52.13,5.43],'de-vilt-beugen':[51.66,5.95]};
+const TOWNXY={'Den Haag':[52.08,4.30],'Voorburg':[52.07,4.36],'Berkel en Rodenrijs':[51.99,4.48],'Maarssen':[52.135,5.03],'Heemstede':[52.355,4.62],'Alphen aan de Rijn':[52.13,4.66]};
+const proj=([la,lo])=>[(lo-MAP.box[0])/(MAP.box[1]-MAP.box[0])*MAP.W,(MAP.box[3]-la)/(MAP.box[3]-MAP.box[2])*MAP.H];
+function hav(a,b){const R=6371,r=Math.PI/180,dl=(b[0]-a[0])*r,dg=(b[1]-a[1])*r;const h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+const roadKm=(a,b)=>Math.round(hav(a,b)*1.25/5)*5||5;
+let fromTown='';
+function curTown(){if(fromTown)return fromTown;const p=st.person&&byId[st.person];return (p&&TOWNXY[p.town])?p.town:'Voorburg'}
+function kmFor(w){const c=LOCXY[w.lk];return c?roadKm(TOWNXY[curTown()],c):null}
+const PINC=['#e8613c','#2f8f6b','#3d6fd6','#c9467e','#d99a1e','#7a52c7'];
+function renderMap(){
+  if(!MAP)return;
+  const town=curTown();
+  $('#fromTown').innerHTML=Object.keys(TOWNXY).sort().map(t=>`<option ${t===town?'selected':''}>${esc(t)}</option>`).join('');
+  const groups={};
+  W.forEach(w=>{if((w.cancelled||w.upcoming)||!LOCXY[w.lk])return;(groups[w.lk]=groups[w.lk]||{lk:w.lk,loc:w.loc,place:w.place,ws:[]}).ws.push(w)});
+  const G=Object.values(groups).map(g=>({...g,km:roadKm(TOWNXY[town],LOCXY[g.lk]),mine:st.person?g.ws.filter(w=>w.att[st.person]).length:0}));
+  G.sort((a,b)=>a.km-b.km);
+  const home=proj(TOWNXY[town]);
+  let s=`<rect width="${MAP.W}" height="${MAP.H}" fill="#cfe6f2"/>`;
+  for(const k of ['GB','FR','DE','LU','BE','NL'])s+=`<path class="land ${['NL','BE','LU'].includes(k)?k:'other'}" d="${MAP.paths[k]}"/>`;
+  s+=`<text class="cl" x="300" y="560">BELGIË</text><text class="cl" x="512" y="470" text-anchor="end">DUITSLAND</text><text class="cl" x="330" y="140">NEDERLAND</text><text class="cl" x="455" y="660" style="font-size:10px">LUX</text>`;
+  G.forEach(g=>{const p=proj(LOCXY[g.lk]);s+=`<line class="route ${st.loc===g.place?'on':''}" x1="${home[0]}" y1="${home[1]}" x2="${p[0]}" y2="${p[1]}"/>`});
+  G.slice().sort((a,b)=>a.ws.length-b.ws.length).forEach((g,i)=>{const p=proj(LOCXY[g.lk]);const r=7+g.ws.length*2.2;const dim=st.person&&!g.mine;
+    s+=`<g class="pin ${st.loc===g.place?'on':''}" data-l="${esc(g.place)}" data-tip="${esc((g.loc||g.place)+' · '+g.place+' — ± '+g.km+' km · '+g.ws.length+'×')}" style="opacity:${dim?.35:1}"><circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="${PINC[g.lk.length%PINC.length]}"/><text x="${p[0]}" y="${p[1]+3.5}" text-anchor="middle">${g.ws.length}</text></g>`});
+  s+=`<g class="home"><circle cx="${home[0]}" cy="${home[1]}" r="15" fill="#fff" stroke="#1f2a24" stroke-width="2"/><text x="${home[0]}" y="${home[1]+7}" text-anchor="middle">🏠</text></g>`;
+  const svg=$('#map');svg.setAttribute('viewBox',`0 0 ${MAP.W} ${MAP.H}`);svg.innerHTML=s;
+  $('#locList').innerHTML=G.map(g=>`<button class="lrow ${st.loc===g.place?'on':''}" data-l="${esc(g.place)}" style="opacity:${st.person&&!g.mine?.45:1}"><span class="dot" style="background:${PINC[g.lk.length%PINC.length]}">${g.ws.length}</span><span class="nm">${esc(g.loc||g.place)}<small>📍 ${esc(g.place)} · ${g.ws.map(w=>w.year).join(', ')}</small></span><span class="km">± ${g.km} km</span></button>`).join('');
+  const p=st.person&&byId[st.person];
+  let tot=0,n=0;W.forEach(w=>{if((w.cancelled||w.upcoming)||!LOCXY[w.lk])return;if(p&&!w.att[p.id])return;tot+=2*roadKm(TOWNXY[town],LOCXY[w.lk]);n++});
+  $('#kmstat').innerHTML=p?`<span>🚗 ${esc(p.name)} reed vanuit ${esc(town)} naar ${n} weekenden</span><b>± ${tot.toLocaleString('nl-NL')} km</b><span class="hint">heen en terug, alles bij elkaar</span>`
+    :`<span>🚗 Alle ${n} weekenden vanuit ${esc(town)}, heen en terug</span><b>± ${tot.toLocaleString('nl-NL')} km</b><span class="hint">Kies hierboven je naam voor jouw eigen totaal</span>`;
+}
+document.addEventListener('change',e=>{if(e.target.id==='fromTown'){fromTown=e.target.value;renderMap();renderGrid()}});
+document.addEventListener('mousemove',e=>{const g=e.target.closest&&e.target.closest('#map .pin'),tip=$('#maptip');if(!tip)return;if(!g){tip.style.opacity=0;return}const b=$('.mapbox').getBoundingClientRect();tip.textContent=g.dataset.tip;tip.style.left=(e.clientX-b.left)+'px';tip.style.top=(e.clientY-b.top)+'px';tip.style.opacity=1});
+
+function renderAll(){renderPeople();renderFilters();renderGrid();renderRank();renderMap()}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-p],[data-gal],#map .pin'); if(!t) return;
+  if(t.dataset.gal){openGallery(t.dataset.gal);return}
+  if(t.dataset.p){st.person=st.person===t.dataset.p?null:t.dataset.p;save();renderAll();if(st.person)$('#profile').scrollIntoView({behavior:'smooth',block:'nearest'});return}
+  if(t.id==='clearP'){st.person=null;save();renderAll();return}
+  if(t.dataset.y){st.year=st.year===t.dataset.y?'':t.dataset.y;st.ed='';renderAll();return}
+  if(t.dataset.l!==undefined){st.loc=st.loc===t.dataset.l?'':t.dataset.l;renderAll();if(st.loc&&t.closest('#kaart'))$('#grid').scrollIntoView({behavior:'smooth'});return}
+  if(t.dataset.v){st.kids=t.dataset.v;renderAll();return}
+  if(t.dataset.a){openAnek(+t.dataset.a);return}
+  if(t.id==='reset'||t.id==='reset2'){Object.assign(st,{person:null,year:'',ed:'',kids:'all',loc:''});save();renderAll();return}
+  if(t.id==='sort'){st.asc=!st.asc;renderGrid();return}
+});
+$('#fYear').onchange=e=>{st.year=e.target.value;st.ed='';renderAll()};
+$('#fEd').onchange=e=>{st.ed=e.target.value;renderAll()};
+
+/* ---------- anecdote player ---------- */
+let cur=null, timers=[];
+function anekList(){return filtered().filter(w=>w.anek)}
+function openAnek(i){cur=i;$('#modal').classList.add('show');play()}
+function closeAnek(){$('#modal').classList.remove('show');timers.forEach(clearTimeout);timers=[];clearStage()}
+function clearStage(){document.querySelectorAll('#stage .e').forEach(n=>n.remove());$('#caption').textContent=''}
+function play(){
+  timers.forEach(clearTimeout);timers=[];
+  const w=W[cur], beats=sceneFor(w);
+  $('#mTitle').textContent=w.anek;
+  $('#mSub').textContent=`Editie ${w.ed} · ${w.year} · ${w.loc||''} ${w.place?'('+w.place+')':''}`;
+  $('#beatnr').innerHTML=beats.length>1?beats.map(()=>'<i></i>').join(''):'';
+  const DUR=3400;
+  beats.forEach((b,bi)=>timers.push(setTimeout(()=>showBeat(b,bi),bi*DUR)));
+  const l=anekList(), idx=l.findIndex(x=>x.i===cur);
+  $('#mPrev').disabled=idx<=0; $('#mNext').disabled=idx<0||idx>=l.length-1;
+  $('#mPrev').style.opacity=idx<=0?.4:1; $('#mNext').style.opacity=(idx<0||idx>=l.length-1)?.4:1;
+}
+function showBeat(b,bi){
+  clearStage();
+  const stage=$('#stage'); stage.className='stage '+(b.bg||'day');
+  document.querySelectorAll('#beatnr i').forEach((n,k)=>n.classList.toggle('on',k===bi));
+  const r=rng(hash(b.t)+bi);
+  b.L.forEach(([em,fx,n,x,y,s,d=0])=>{
+    for(let k=0;k<n;k++){
+      const el=document.createElement('div'); el.className='e fx-'+fx;
+      let xx=x, yy=y, dd=d;
+      if(n>1){
+        if(['rain','confetti'].includes(fx)){xx=5+r()*90;dd=d+r()*1.6}
+        else if(['rise'].includes(fx)){xx=x+(r()-.5)*24;dd=d+r()*1.6}
+        else if(['crawl','drive','fly'].includes(fx)){yy=y+(r()-.5)*14;dd=d+k*(fx==='crawl'?.35:.9)}
+        else if(fx==='arc'){dd=d+k*.53}
+        else {xx=x+(k-(n-1)/2)*(s+4);yy=y+(r()-.5)*10;dd=d+k*.15}
+      }
+      el.style.cssText=`--x:${xx}%;--y:${yy}%;--s:${s*0.9}cqw;--d:${dd}s;`;
+      el.innerHTML=`<span>${em}</span>`;
+      stage.appendChild(el);
+    }
+  });
+  const cap=$('#caption'); let i=0; cap.textContent='';
+  const type=()=>{cap.textContent=b.t.slice(0,++i); if(i<b.t.length) timers.push(setTimeout(type,28))};
+  timers.push(setTimeout(type,250));
+}
+$('#mClose').onclick=closeAnek;
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeAnek()};
+$('#mReplay').onclick=play;
+$('#mPrev').onclick=()=>{const l=anekList(),i=l.findIndex(x=>x.i===cur);if(i>0){cur=l[i-1].i;play()}};
+$('#mNext').onclick=()=>{const l=anekList(),i=l.findIndex(x=>x.i===cur);if(i>=0&&i<l.length-1){cur=l[i+1].i;play()}};
+document.addEventListener('keydown',e=>{if(!$('#modal').classList.contains('show'))return;if(e.key==='Escape')closeAnek();if(e.key==='ArrowRight')$('#mNext').click();if(e.key==='ArrowLeft')$('#mPrev').click()});
+$('#stage').style.containerType='inline-size';
+
+/* ---------- photo collage ---------- */
+let galEd=null;
+function openGallery(ed){galEd=String(ed);renderGallery();$('#gmodal').classList.add('show')}
+function renderGallery(){
+  if(galEd==null)return;
+  const w=W.find(x=>String(x.ed)===galEd); const items=gallery[galEd]||[];
+  $('#gTitle').textContent=`Fotocollage · ${w?(w.loc||w.place):''}`;
+  $('#gSub').textContent=w?`Editie ${w.ed} · ${w.year} · ${items.length} foto${items.length===1?'':'s'}`:'';
+  $('#gal').innerHTML=items.length?items.map((g,i)=>`<figure><img src="${esc(g.url)}" alt="" loading="lazy">${g.cap?`<figcaption>${esc(g.cap)}</figcaption>`:''}</figure>`).join('')
+    :`<div class="empty" style="grid-column:1/-1">Nog geen foto's voor dit weekend.</div>`;
+}
+$('#gClose').onclick=()=>{$('#gmodal').classList.remove('show');galEd=null};
+$('#gmodal').onclick=e=>{if(e.target.id==='gmodal'){$('#gmodal').classList.remove('show');galEd=null}};
+function alertBox(msg){const d=document.createElement('div');d.textContent=msg;d.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1f2a24;color:#fff;padding:10px 16px;border-radius:12px;z-index:99';document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}
+
+const SNAP=/*SNAP*/null;
+const STATIC=new Set();
+const blobUrl=a=>STATIC.has(a)?'img/'+a+'.jpg':'/_blob/'+a;
+if(SNAP){for(const k in SNAP.av){STATIC.add(SNAP.av[k]);}for(const k in SNAP.ph)STATIC.add(SNAP.ph[k][0]);for(const k in SNAP.ga)SNAP.ga[k].forEach(g=>STATIC.add(g[0]));
+  for(const k in SNAP.av)avatarUrl[k]=blobUrl(SNAP.av[k]);
+  for(const k in SNAP.ph){photoUrl[k]=blobUrl(SNAP.ph[k][0]);photoSrc[k]=SNAP.ph[k][1];}
+  for(const k in SNAP.ga)gallery[k]=SNAP.ga[k].map(g=>({asset:g[0],url:blobUrl(g[0]),src:g[1],cap:''}));}
+async function initShared(){
+  if(!window.claude||!claude.use) return;
+  try{
+    dbApi=await claude.use('db');
+    if(dbApi){
+      const sub=(kind,map)=>dbApi.collection(kind).onSnapshot(s=>{
+        if(!s.docs.length) return;
+        for(const k in map) delete map[k];
+        s.docs.forEach(d=>{const v=d.data();if(v&&typeof v.asset==='string'&&/^[\w-]+$/.test(v.asset)){map[d.id]=blobUrl(v.asset);if(map===photoUrl&&typeof v.src==='string')photoSrc[d.id]=v.src.slice(0,60)}});
+        if(SNAP){const src=map===avatarUrl?SNAP.av:null;if(src)for(const k in src)if(!map[k]||k==='richard')map[k]=blobUrl(src[k]);if(map===photoUrl)for(const k in SNAP.ph)if(!map[k])map[k]=blobUrl(SNAP.ph[k][0]);}
+        renderAll();
+      },()=>{});
+      dbApi.collection('gallery').onSnapshot(s=>{
+        if(!s.docs.length) return;
+        for(const k in gallery) delete gallery[k];
+        s.docs.forEach(d=>{const v=d.data();if(v&&Array.isArray(v.items))gallery[d.id.replace(/^ed-/,'')]=v.items.filter(g=>g&&typeof g.asset==='string'&&/^[\w-]+$/.test(g.asset)).map(g=>({asset:g.asset,url:blobUrl(g.asset),src:String(g.src||'').slice(0,80),cap:String(g.cap||'').slice(0,140)}))});
+        renderGrid();renderGallery();
+      },()=>{});
+      sub('avatars',avatarUrl); sub('photos',photoUrl);
+      dbApi.collection('albums').onSnapshot(s=>{
+        for(const k in albumUrl) delete albumUrl[k];
+        s.docs.forEach(d=>{const v=d.data(); if(v&&okUrl(v.url)) albumUrl[d.id.replace(/^ed-/,'')]=v.url.trim()});
+        renderGrid();
+      },()=>{});
+    }
+    const user=await claude.use('user');
+    let c=null; try{ if(user&&user.canEdit) c=await user.canEdit(); }catch(e){}
+    
+    canEditShared=false;
+    if(!canEditShared) assetsApi=null;
+    renderAll();
+  }catch(e){console.warn(e)}
+}
+
+renderStats(); renderAll(); initShared();
+</script>
+</body>
+</html>
