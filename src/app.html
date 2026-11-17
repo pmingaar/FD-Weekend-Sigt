@@ -598,6 +598,12 @@ function ageOn(born,date){const b=new Date(born+'T12:00'),d=new Date(date+'T12:0
 function avgAgeHTML(w,ppl){if(!w.date)return '';const part=(arr,lbl)=>{const k=arr.filter(p=>p.born);if(!k.length)return '';const avg=k.reduce((s,p)=>s+ageOn(p.born,w.date),0)/k.length;return `<b>${avg.toFixed(1).replace('.',',')}</b> jr ${lbl}${k.length<arr.length?` <small class="hint">(${k.length} van ${arr.length} bekend)</small>`:''}`};
   const a=part(ppl.filter(p=>!p.kid),'volwassenen'),k=part(ppl.filter(p=>p.kid),'kids');if(!a&&!k)return '';
   return `<div class="row"><span class="k">🎂</span><span>Gem. leeftijd: ${[a,k].filter(Boolean).join(' · ')}</span></div>`;}
+
+// "Was Annie de weg kwijt?": vaste willekeurige keuze per weekend (zelfde bij elke keer laden), alleen als Annet mee was
+function annieHTML(w){if(w.cancelled||w.upcoming||!(w.att&&w.att.annet>0))return '';
+  let h=2166136261;for(const c of 'annie-'+w.ed+'-'+w.year){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}
+  const a=['Heenweg','Terugweg','Beiden'][(h>>>0)%3];
+  return `<div class="row annie"><span class="k">🧭</span><span><b>Was Annie de weg kwijt?</b> ${a}${a==='Beiden'?' 🙈':''} <small class="hint">(ze reed met Bossie mee)</small></span></div>`;}
 function standHTML(w){const s=w.stand;if(!s)return '';
   const C=[['ajax','Ajax'],['fey','Feyenoord'],['ado','ADO']];
   const ch=C.map(([k,n])=>{const v=s[k];if(!v)return `<span class="club out" title="${n} speelde in ${s.season} niet in de Eredivisie"><span class="bd ${k}"></span>${n} · KKD</span>`;
@@ -641,6 +647,7 @@ function renderGrid(){
         <div><h3>${esc(w.loc||w.place)}</h3><div class="where">📍 ${esc(w.place)}${host?` · <a href="${esc(w.web)}" target="_blank" rel="noopener">${esc(host)} ↗</a>`:''}${kmFor(w)?`<br>🚗 ± ${kmFor(w)} km vanaf ${esc(curTown())}`:''}</div></div>
         ${w.org?`<div class="row"><span class="k">📋</span><span><b>Organisatie:</b> ${esc(w.org)}</span></div>`:''}
         ${w.act?`<div class="row"><span class="k">🎯</span><span>${esc(w.act)}</span></div>`:''}
+        ${annieHTML(w)}
         <div class="row"><span class="k">👥</span><span><b>${ppl.filter(p=>!p.kid).length}</b> volwassenen${ppl.some(p=>p.kid)?`, <b>${ppl.filter(p=>p.kid).length}</b> kids`:''}</span></div>
         ${avgAgeHTML(w,ppl)}
         <div class="atts">${ppl.map(p=>`<span data-p="${p.id}">${avatar(p,'sm '+(w.att[p.id]<1?'half':'')+(st.person===p.id?' hl':''))}</span>`).join('')}</div>

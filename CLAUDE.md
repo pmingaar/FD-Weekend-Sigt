@@ -50,7 +50,7 @@ Live adres: https://fd-weekend-sigt.patrick-7f3.workers.dev
 
 ## Functies in de app
 
-Avatar per deelnemer (foto, anders initialen), "Ranking the FD-ers" (half aanwezig = 0,5), filters op persoon, jaar, editie, soort weekend en locatie, klikbare tijdlijn, Benelux-kaart met km vanaf woonplaats, per weekend: huisfoto, organisatie, activiteit, aanwezigen, gemiddelde leeftijd, albumlink, fotocollage, "Dat weekend" (weer, Top 40, voetbalstand, nieuws), anekdote als animatie met "Voor het laatst mee" (niet voor de laatste 2 gehouden weekenden), en een blok met Spotify-playlists.
+Avatar per deelnemer (foto, anders initialen), "Ranking the FD-ers" (half aanwezig = 0,5), filters op persoon, jaar, editie, soort weekend en locatie, klikbare tijdlijn, Benelux-kaart met km vanaf woonplaats, per weekend: huisfoto, organisatie, activiteit, aanwezigen, gemiddelde leeftijd, albumlink, fotocollage, "Dat weekend" (weer, Top 40, voetbalstand, nieuws), anekdote als animatie met "Voor het laatst mee" (niet voor de laatste 2 gehouden weekenden), een blok met Spotify-playlists, en bij elk weekend waar Annet (Annie) mee was "Was Annie de weg kwijt?" (Heenweg/Terugweg/Beiden, vaste willekeurige keuze per editie; ze reed met Bossie mee).
 Er is bewust geen mogelijkheid om via de app zelf anekdotes of media toe te voegen.
 
 ## Afspraken
