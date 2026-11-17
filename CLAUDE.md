@@ -66,5 +66,5 @@ Er is bewust geen mogelijkheid om via de app zelf anekdotes of media toe te voeg
 
 - Geen huisfoto: Putten (privé), Ardennen, Hunzepark.
 - Nog geen avatar: deelnemers met alleen een voornaam en de meeste kids.
-- 27 deelnemers zonder geboortedatum.
+- 18 deelnemers zonder geboortedatum.
 - Editie 41 (20 tot 22 nov 2026, Larikshoeve Leusden): na het weekend aanwezigen, activiteit en anekdote invullen, en dan `wx`, `top40`, `news` en `stand` opzoeken.
