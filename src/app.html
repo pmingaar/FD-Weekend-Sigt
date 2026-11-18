@@ -224,6 +224,20 @@ select:hover{transform:translateY(-2px)}
 .spcard b{display:block;font-size:15px}.spcard small{display:block;font-size:12px;opacity:.85}
 .spic{flex:none;width:36px;height:36px;border-radius:50%;background:#000;display:grid;place-items:center;font-size:14px}
 .spcard .go{margin-left:auto;font-size:16px}
+.bnext{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.bnext .bn{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff3e6,#ffe1c2);border-radius:14px;padding:8px 14px 8px 8px}
+.bnext .bn.today{background:linear-gradient(135deg,#ffd76a,#ffb347);animation:bpulse 1.6s ease-in-out infinite}
+@keyframes bpulse{50%{transform:scale(1.03)}}
+.bnext .bn b{display:block}.bnext .bn small{color:#7a3a12}
+.bmonths{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.bmonth{background:#f6f8f5;border-radius:12px;padding:8px 10px}
+.bmonth.cur{outline:2px solid #ffb347}
+.bmonth h3{margin:0 0 6px;font-size:13px;text-transform:capitalize;color:var(--muted)}
+.bmonth .bl{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:13px}
+.bmonth .bl .av{width:26px;height:26px;font-size:10px;flex:none}
+.bmonth .bl .d{width:22px;font-weight:700;text-align:right;flex:none}
+.bmonth .bl .t{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+.bmonth .empty{font-size:12px;color:var(--muted)}
 /* toen */
 .then{border:2px dashed #e4dccb;border-radius:14px;padding:10px 12px;display:grid;gap:8px;font-size:13px;background:#fffdf8}
 .then .h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;display:flex;justify-content:space-between}
@@ -352,6 +366,13 @@ select:hover{transform:translateY(-2px)}
         <p class="hint" style="margin-top:8px">km = geschatte rijafstand (hemelsbreed × 1,25), enkele reis. Klik op een plek om alleen die weekenden te zien.</p>
       </div>
     </div>
+  </section>
+
+  <section class="panel" id="bday">
+    <div class="ph"><h2>🎂 Verjaardagskalender</h2><button class="ghost" id="bdayIcs" title="Alle verjaardagen als jaarlijks terugkerende afspraken in je agenda">📅 Zet in mijn agenda</button></div>
+    <div id="bdayNext"></div>
+    <div class="bmonths" id="bdayGrid"></div>
+    <p class="hint" id="bdayMiss"></p>
   </section>
 
   <section class="panel" id="spotify">
@@ -718,7 +739,30 @@ function renderMap(){
 document.addEventListener('change',e=>{if(e.target.id==='fromTown'){fromTown=e.target.value;renderMap();renderGrid()}});
 document.addEventListener('mousemove',e=>{const g=e.target.closest&&e.target.closest('#map .pin'),tip=$('#maptip');if(!tip)return;if(!g){tip.style.opacity=0;return}const b=$('.mapbox').getBoundingClientRect();tip.textContent=g.dataset.tip;tip.style.left=(e.clientX-b.left)+'px';tip.style.top=(e.clientY-b.top)+'px';tip.style.opacity=1});
 
-function renderAll(){renderPeople();renderFilters();renderGrid();renderRank();renderMap()}
+
+/* ---------- verjaardagskalender ---------- */
+const BMND=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+function nextBday(born){const t=new Date(TODAY+'T12:00'),[y,m,d]=born.split('-').map(Number);let n=new Date(t.getFullYear(),m-1,d,12);if(n<t)n=new Date(t.getFullYear()+1,m-1,d,12);return {date:n,days:Math.round((n-t)/864e5),turns:n.getFullYear()-y};}
+function renderBday(){
+  const ps=P.filter(p=>p.born);if(!document.getElementById('bdayGrid'))return;
+  const L=ps.map(p=>({p,m:+p.born.slice(5,7),d:+p.born.slice(8,10),...nextBday(p.born)}));
+  const up=L.slice().sort((a,b)=>a.days-b.days).slice(0,3);
+  document.getElementById('bdayNext').innerHTML=`<div class="bnext">${up.map(x=>`<div class="bn ${x.days===0?'today':''}" data-p="${x.p.id}">${avatar(x.p)}<span><b>${esc(x.p.name)}</b><small>${x.days===0?`🎉 Vandaag jarig! (${x.turns})`:x.days===1?`morgen · wordt ${x.turns}`:`${x.date.getDate()} ${BMND[x.date.getMonth()]} · over ${x.days} dagen · wordt ${x.turns}`}</small></span></div>`).join('')}</div>`;
+  const cm=new Date(TODAY+'T12:00').getMonth()+1;
+  document.getElementById('bdayGrid').innerHTML=BMND.map((n,i)=>{const r=L.filter(x=>x.m===i+1).sort((a,b)=>a.d-b.d);
+    return `<div class="bmonth ${i+1===cm?'cur':''}"><h3>${n}</h3>${r.length?r.map(x=>`<div class="bl" data-p="${x.p.id}"><span class="d">${x.d}</span>${avatar(x.p)}<span>${esc(x.p.name)}</span><span class="t">${x.days===0?'🎉 vandaag':'wordt '+x.turns}</span></div>`).join(''):'<div class="empty">—</div>'}</div>`}).join('');
+  const miss=P.filter(p=>!p.born);
+  document.getElementById('bdayMiss').textContent=miss.length?`Nog onbekend: ${miss.map(p=>p.name).join(', ')}.`:'';
+}
+function bdayIcs(){
+  const ps=P.filter(p=>p.born),pad=n=>String(n).padStart(2,'0'),now=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
+  const ev=ps.map(p=>{const [y,m,d]=p.born.split('-');const nx=new Date(+y,+m-1,+d+1);
+    return ['BEGIN:VEVENT',`UID:fd-bday-${p.id}@fd-weekend-sigt`,`DTSTAMP:${now}`,`DTSTART;VALUE=DATE:${y}${m}${d}`,`DTEND;VALUE=DATE:${nx.getFullYear()}${pad(nx.getMonth()+1)}${pad(nx.getDate())}`,'RRULE:FREQ=YEARLY',`SUMMARY:🎂 ${p.full||p.name} jarig (${y})`,'TRANSP:TRANSPARENT','END:VEVENT'].join('\r\n')});
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FD-Weekend-Sigt//Verjaardagen//NL','CALSCALE:GREGORIAN','X-WR-CALNAME:FD-verjaardagen',...ev,'END:VCALENDAR'].join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='FD-verjaardagen.ics';document.body.append(a);a.click();a.remove();
+}
+document.addEventListener('click',e=>{if(e.target.closest('#bdayIcs'))bdayIcs();});
+function renderAll(){renderPeople();renderFilters();renderGrid();renderRank();renderMap();renderBday()}
 
 /* ---------- events ---------- */
 document.addEventListener('click',e=>{
