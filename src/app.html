@@ -225,14 +225,16 @@ select:hover{transform:translateY(-2px)}
 .spic{flex:none;width:36px;height:36px;border-radius:50%;background:#000;display:grid;place-items:center;font-size:14px}
 .spcard .go{margin-left:auto;font-size:16px}
 .bnext{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.bnext .bn{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff3e6,#ffe1c2);border-radius:14px;padding:8px 14px 8px 8px}
+.bnext .bn{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#fff3e6,#ffe1c2);border-radius:999px;padding:4px 12px 4px 4px;font-size:13px}
+.bnext .bn .av{width:30px;height:30px;font-size:11px}
+.bmore{margin-top:10px}
 .bnext .bn.today{background:linear-gradient(135deg,#ffd76a,#ffb347);animation:bpulse 1.6s ease-in-out infinite}
 @keyframes bpulse{50%{transform:scale(1.03)}}
-.bnext .bn b{display:block}.bnext .bn small{color:#7a3a12}
-.bmonths{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.bnext .bn b{display:block;line-height:1.1}.bnext .bn small{color:#7a3a12;font-size:11px}
+.bmonths{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
 .bmonth{background:#f6f8f5;border-radius:12px;padding:8px 10px}
 .bmonth.cur{outline:2px solid #ffb347}
-.bmonth h3{margin:0 0 6px;font-size:13px;text-transform:capitalize;color:var(--muted)}
+.bmonth h3{margin:0 0 6px;font-size:13px;color:var(--muted)}
 .bmonth .bl{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:13px}
 .bmonth .bl .av{width:26px;height:26px;font-size:10px;flex:none}
 .bmonth .bl .d{width:22px;font-weight:700;text-align:right;flex:none}
@@ -372,7 +374,8 @@ select:hover{transform:translateY(-2px)}
     <div class="ph"><h2>🎂 Verjaardagskalender</h2><button class="ghost" id="bdayIcs" title="Alle verjaardagen als jaarlijks terugkerende afspraken in je agenda">📅 Zet in mijn agenda</button></div>
     <div id="bdayNext"></div>
     <div class="bmonths" id="bdayGrid"></div>
-    <p class="hint" id="bdayMiss"></p>
+    <button class="ghost bmore" id="bdayMore">Verder ▾</button>
+    <p class="hint" id="bdayMiss" hidden></p>
   </section>
 
   <section class="panel" id="spotify">
@@ -743,16 +746,19 @@ document.addEventListener('mousemove',e=>{const g=e.target.closest&&e.target.clo
 /* ---------- verjaardagskalender ---------- */
 const BMND=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 function nextBday(born){const t=new Date(TODAY+'T12:00'),[y,m,d]=born.split('-').map(Number);let n=new Date(t.getFullYear(),m-1,d,12);if(n<t)n=new Date(t.getFullYear()+1,m-1,d,12);return {date:n,days:Math.round((n-t)/864e5),turns:n.getFullYear()-y};}
+let bdayAll=false;
 function renderBday(){
   const ps=P.filter(p=>p.born);if(!document.getElementById('bdayGrid'))return;
   const L=ps.map(p=>({p,m:+p.born.slice(5,7),d:+p.born.slice(8,10),...nextBday(p.born)}));
   const up=L.slice().sort((a,b)=>a.days-b.days).slice(0,3);
-  document.getElementById('bdayNext').innerHTML=`<div class="bnext">${up.map(x=>`<div class="bn ${x.days===0?'today':''}" data-p="${x.p.id}">${avatar(x.p)}<span><b>${esc(x.p.name)}</b><small>${x.days===0?`🎉 Vandaag jarig! (${x.turns})`:x.days===1?`morgen · wordt ${x.turns}`:`${x.date.getDate()} ${BMND[x.date.getMonth()]} · over ${x.days} dagen · wordt ${x.turns}`}</small></span></div>`).join('')}</div>`;
-  const cm=new Date(TODAY+'T12:00').getMonth()+1;
-  document.getElementById('bdayGrid').innerHTML=BMND.map((n,i)=>{const r=L.filter(x=>x.m===i+1).sort((a,b)=>a.d-b.d);
-    return `<div class="bmonth ${i+1===cm?'cur':''}"><h3>${n}</h3>${r.length?r.map(x=>`<div class="bl" data-p="${x.p.id}"><span class="d">${x.d}</span>${avatar(x.p)}<span>${esc(x.p.name)}</span><span class="t">${x.days===0?'🎉 vandaag':'wordt '+x.turns}</span></div>`).join(''):'<div class="empty">—</div>'}</div>`}).join('');
+  document.getElementById('bdayNext').innerHTML='';void `<div class="bnext">${up.map(x=>`<div class="bn ${x.days===0?'today':''}" data-p="${x.p.id}">${avatar(x.p)}<span><b>${esc(x.p.name)}</b><small>${x.days===0?`🎉 Vandaag jarig! (${x.turns})`:x.days===1?`morgen · wordt ${x.turns}`:`${x.date.getDate()} ${BMND[x.date.getMonth()]} · over ${x.days} dagen · wordt ${x.turns}`}</small></span></div>`).join('')}</div>`;
+  const cm=new Date(TODAY+'T12:00').getMonth();
+  const order=[...Array(12)].map((_,k)=>(cm+k)%12), shown=bdayAll?order:order.slice(0,2);
+  document.getElementById('bdayGrid').innerHTML=shown.map((i,k)=>{const n=BMND[i];const r=L.filter(x=>x.m===i+1).sort((a,b)=>a.d-b.d);
+    return `<div class="bmonth ${k===0?'cur':''}"><h3>${n[0].toUpperCase()+n.slice(1)}${k===0?' <small>· deze maand</small>':k===1?' <small>· volgende maand</small>':''}</h3>${r.length?r.map(x=>`<div class="bl" data-p="${x.p.id}"><span class="d">${x.d}</span>${avatar(x.p)}<span>${esc(x.p.name)}</span><span class="t">${x.days===0?'🎉 vandaag':'wordt '+x.turns}</span></div>`).join(''):'<div class="empty">Geen jarigen</div>'}</div>`}).join('');
+  document.getElementById('bdayMore').textContent=bdayAll?'Minder ▴':'Verder ▾';
   const miss=P.filter(p=>!p.born);
-  document.getElementById('bdayMiss').textContent=miss.length?`Nog onbekend: ${miss.map(p=>p.name).join(', ')}.`:'';
+  document.getElementById('bdayMiss').hidden=!bdayAll;document.getElementById('bdayMiss').textContent=miss.length?`Nog onbekend: ${miss.map(p=>p.name).join(', ')}.`:'';
 }
 function bdayIcs(){
   const ps=P.filter(p=>p.born),pad=n=>String(n).padStart(2,'0'),now=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
@@ -761,7 +767,7 @@ function bdayIcs(){
   const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FD-Weekend-Sigt//Verjaardagen//NL','CALSCALE:GREGORIAN','X-WR-CALNAME:FD-verjaardagen',...ev,'END:VCALENDAR'].join('\r\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='FD-verjaardagen.ics';document.body.append(a);a.click();a.remove();
 }
-document.addEventListener('click',e=>{if(e.target.closest('#bdayIcs'))bdayIcs();});
+document.addEventListener('click',e=>{if(e.target.closest('#bdayIcs'))bdayIcs();if(e.target.closest('#bdayMore')){bdayAll=!bdayAll;renderBday();if(!bdayAll)document.getElementById('bday').scrollIntoView({block:'start'});}});
 function renderAll(){renderPeople();renderFilters();renderGrid();renderRank();renderMap();renderBday()}
 
 /* ---------- events ---------- */
