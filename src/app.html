@@ -241,6 +241,13 @@ select:hover{transform:translateY(-2px)}
 .bmonth .bl .t{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
 .bmonth .empty{font-size:12px;color:var(--muted)}
 .soonanek{margin-top:8px;background:#fff8e6;border-radius:10px;padding:8px 12px;font-size:13px}
+.inge{display:flex;align-items:center;gap:14px}
+.ingebtn{flex:none;width:72px;height:72px;border-radius:50%;padding:0;border:3px solid #ffb347;overflow:hidden;cursor:pointer;background:none;box-shadow:0 3px 0 #c97a1a;transition:transform .2s}
+.ingebtn:hover{transform:rotate(-6deg) scale(1.05)}.ingebtn img{width:100%;height:100%;object-fit:cover;display:block}
+.ingetxt b{font-size:16px}.ingetxt small{display:block;color:var(--muted)}
+.ingeans{margin-top:6px;background:#fff3e6;border-radius:10px;padding:8px 12px;animation:ingepop .4s ease}
+.ingeans b{color:#c0392b;font-size:18px}
+@keyframes ingepop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 /* toen */
 .then{border:2px dashed #e4dccb;border-radius:14px;padding:10px 12px;display:grid;gap:8px;font-size:13px;background:#fffdf8}
 .then .h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;display:flex;justify-content:space-between}
@@ -346,6 +353,12 @@ select:hover{transform:translateY(-2px)}
     <div class="ph"><h2>Wie ben jij?</h2><span class="hint">Klik op je avatar om je eigen weekenden te zien</span></div>
     <div class="people" id="people"></div>
     <div class="profile" id="profile"></div>
+  </section>
+
+  <section class="panel inge" id="inge">
+    <button class="ingebtn" id="ingeBtn" aria-expanded="false" title="Klik voor het antwoord"><img src="img/inge_venema.jpg" alt="Inge Venema"></button>
+    <div class="ingetxt"><b>Is Inge Venema BIV of OIV?</b><small id="ingeHint">Klik op Inge voor het antwoord</small>
+      <div class="ingeans" id="ingeAns" hidden>Het is krap, maar het is (namens Klaas) nu <b>PNIV</b><br><small>(Precies Niveau Inge Venema)</small></div></div>
   </section>
 
   <section class="panel" id="rank">
@@ -768,7 +781,7 @@ function bdayIcs(){
   const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FD-Weekend-Sigt//Verjaardagen//NL','CALSCALE:GREGORIAN','X-WR-CALNAME:FD-verjaardagen',...ev,'END:VCALENDAR'].join('\r\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='FD-verjaardagen.ics';document.body.append(a);a.click();a.remove();
 }
-document.addEventListener('click',e=>{if(e.target.closest('#bdayIcs'))bdayIcs();if(e.target.closest('#bdayMore')){bdayAll=!bdayAll;renderBday();if(!bdayAll)document.getElementById('bday').scrollIntoView({block:'start'});}});
+document.addEventListener('click',e=>{if(e.target.closest('#ingeBtn')){const a=document.getElementById('ingeAns'),b=document.getElementById('ingeBtn');a.hidden=!a.hidden;b.setAttribute('aria-expanded',!a.hidden);document.getElementById('ingeHint').hidden=!a.hidden;}if(e.target.closest('#bdayIcs'))bdayIcs();if(e.target.closest('#bdayMore')){bdayAll=!bdayAll;renderBday();if(!bdayAll)document.getElementById('bday').scrollIntoView({block:'start'});}});
 function renderAll(){renderPeople();renderFilters();renderGrid();renderRank();renderMap();renderBday()}
 
 /* ---------- events ---------- */
