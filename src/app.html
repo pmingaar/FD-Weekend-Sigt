@@ -248,7 +248,7 @@ select:hover{transform:translateY(-2px)}
 .iq{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .iqc{background:#f6f8f5;border-radius:12px;padding:8px;text-align:center;animation:ingepop .4s ease both}
 .iqc:nth-child(2){animation-delay:.1s}.iqc:nth-child(3){animation-delay:.2s}
-.iqc img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block}
+.iqc .iqimg svg{width:100%;aspect-ratio:1;border-radius:10px;display:block}
 .iqc .nm{font-weight:700;font-size:13px;margin:4px 0}
 .iqc .bt{display:flex;gap:4px;justify-content:center}
 .iqc .bt button{flex:1;border:2px solid #1f5a40;background:#fff;border-radius:999px;font-weight:800;font-size:12px;padding:4px 0;cursor:pointer}
@@ -367,7 +367,7 @@ select:hover{transform:translateY(-2px)}
   <section class="panel inge" id="inge">
     <div class="ingetop">
       <button class="ingebtn" id="ingeBtn" aria-expanded="false" title="Start de Inge Venema-contest"><img src="img/inge_venema.jpg" alt="Inge Venema"></button>
-      <div class="ingetxt"><b>De Inge Venema-contest: BIV of OIV?</b><small>Inge zelf is (namens Klaas) PNIV: Precies Niveau Inge Venema. Klik op Inge en beoordeel 3 FD-dames.</small></div>
+      <div class="ingetxt"><b>De Inge Venema-contest: BIV of OIV?</b><small>Inge zelf is (namens Klaas) PNIV: Precies Niveau Inge Venema. Klik op Inge en beoordeel 3 willekeurige dames.</small></div>
     </div>
     <div id="ingeQuiz" hidden></div>
   </section>
@@ -773,11 +773,31 @@ const BMND=['januari','februari','maart','april','mei','juni','juli','augustus',
 function nextBday(born){const t=new Date(TODAY+'T12:00'),[y,m,d]=born.split('-').map(Number);let n=new Date(t.getFullYear(),m-1,d,12);if(n<t)n=new Date(t.getFullYear()+1,m-1,d,12);return {date:n,days:Math.round((n-t)/864e5),turns:n.getFullYear()-y};}
 
 /* ---------- Inge Venema-contest (er is geen verliezer: altijd 10 punten) ---------- */
-const INGE_POOL=['annet','alice','anneke','wendy','marije','suus','brigitte','bieneke','angela'];
+const INGE_NAMES=['Mieke','Floor','Sanne','Femke','Joke','Ilse','Marloes','Esther','Petra','Yvonne','Anouk','Wilma','Ingrid','Saskia','Mirjam','Kim'];
+// verzonnen getekende dames (geen echte personen): willekeurig gezicht, blond haar, kleding en achtergrond
+function ingeFace(){const r=a=>a[Math.floor(Math.random()*a.length)];
+  const skin=r(['#f6d5c3','#f1c7a8','#e8b796','#fbe0cf','#d9a07a']),hair=r(['#f3d36b','#e9c25a','#f7e29a','#d9b04c','#f0cf7e']),
+    top=r(['#1f5a40','#c0392b','#2e86c1','#8e44ad','#e67e22','#16a085','#d35400']),bg=r(['#fde2e4','#e2ece9','#dfe7fd','#fff1c1','#e8dff5','#d3f0ee']),
+    style=r(['bob','lang','staart','krul']),glasses=Math.random()<.3,ear=Math.random()<.5,lip=r(['#c0392b','#d35d6e','#b03a48']),
+    eye=r(['#3b6ea5','#4b7f52','#6b4f3a']),smile=r(['M88 128 Q100 140 112 128','M90 128 Q100 136 110 128','M86 126 Q100 144 114 126']);
+  const back={bob:`<path d="M52 92 Q50 40 100 36 Q150 40 148 92 L150 132 Q130 140 128 120 L72 120 Q70 140 50 132Z" fill="${hair}"/>`,
+    lang:`<path d="M48 90 Q46 34 100 32 Q154 34 152 90 L158 190 L42 190Z" fill="${hair}"/>`,
+    staart:`<path d="M54 90 Q52 38 100 36 Q148 38 146 90Z" fill="${hair}"/><path d="M140 60 Q178 80 164 150 Q156 120 142 100Z" fill="${hair}"/>`,
+    krul:`<g fill="${hair}">${[...Array(14)].map((_,i)=>{const t=i/13*Math.PI;return `<circle cx="${100-58*Math.cos(t)}" cy="${96-60*Math.sin(t)}" r="18"/>`}).join('')}<circle cx="46" cy="130" r="16"/><circle cx="154" cy="130" r="16"/></g>`}[style];
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="${bg}"/>${back}
+    <path d="M40 200 Q46 160 100 156 Q154 160 160 200Z" fill="${top}"/><rect x="88" y="138" width="24" height="22" fill="${skin}"/>
+    <ellipse cx="100" cy="100" rx="40" ry="46" fill="${skin}"/>
+    <path d="M58 88 Q62 50 100 48 Q138 50 142 88 Q122 66 100 70 Q78 66 58 88Z" fill="${hair}"/>
+    <circle cx="85" cy="100" r="4.5" fill="${eye}"/><circle cx="115" cy="100" r="4.5" fill="${eye}"/>
+    <path d="M77 90 Q85 86 92 90 M108 90 Q115 86 123 90" stroke="#8a6a3a" stroke-width="2" fill="none"/>
+    <path d="${smile}" stroke="${lip}" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="76" cy="116" r="7" fill="#f4a3a3" opacity=".45"/><circle cx="124" cy="116" r="7" fill="#f4a3a3" opacity=".45"/>
+    ${glasses?'<g stroke="#333" stroke-width="3" fill="none"><circle cx="85" cy="100" r="12"/><circle cx="115" cy="100" r="12"/><path d="M97 100 L103 100"/></g>':''}
+    ${ear?`<circle cx="60" cy="114" r="4" fill="#f1c40f"/><circle cx="140" cy="114" r="4" fill="#f1c40f"/>`:''}</svg>`;}
 function ingeStart(){const q=document.getElementById('ingeQuiz');
-  const pool=INGE_POOL.filter(id=>byId[id]&&avatarUrl[id]).sort(()=>Math.random()-.5).slice(0,3);
+  const names=INGE_NAMES.slice().sort(()=>Math.random()-.5).slice(0,3);
   q.hidden=false;document.getElementById('ingeBtn').setAttribute('aria-expanded','true');
-  q.innerHTML=`<div class="iq">${pool.map(id=>`<div class="iqc" data-id="${id}"><img src="${esc(avatarUrl[id])}" alt=""><div class="nm">${esc(byId[id].name)}</div><div class="bt"><button data-v="BIV">BIV</button><button data-v="OIV">OIV</button></div></div>`).join('')}</div><div id="iqRes"></div>`;}
+  q.innerHTML=`<div class="iq">${names.map(n=>`<div class="iqc"><div class="iqimg">${ingeFace()}</div><div class="nm">${n}</div><div class="bt"><button data-v="BIV">BIV</button><button data-v="OIV">OIV</button></div></div>`).join('')}</div><div id="iqRes"></div>`;}
 function ingeVote(btn){const c=btn.closest('.iqc');c.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===btn));
   const all=[...document.querySelectorAll('#ingeQuiz .iqc')];if(all.every(x=>x.querySelector('button.on')))
     document.getElementById('iqRes').innerHTML=`<div class="iqres"><div class="big">🏆 10 punten!</div><b>Gefeliciteerd, jij hebt de Inge Venema-contest gewonnen!</b><br><small>Je had natuurlijk alles goed. Zoals altijd.</small><br><button class="ghost" id="iqAgain">Nog een keer 🔁</button></div>`;}
