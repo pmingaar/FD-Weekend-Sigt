@@ -14,6 +14,7 @@ src/snap.json         Welke foto bij wie/wat hoort: {av:{persoonId:fotoId}, ph:{
 public/img/<id>.jpg   Alle foto's (avatars, huizen, collages), max 1000 px
 public/               Verder: PWA-iconen, manifest.webmanifest, _headers (noindex)
 data/*.xlsx           De bron-sheet "Overzicht FD Weekenden 1.2.xlsx"
+data/overrides.json   Handmatige aanvullingen die niet in de sheet staan (per editie; bv. anek_extra)
 scripts/build.py      Bouwt dist/ (index.html met alles ingebakken, plus public/)
 scripts/update_from_sheet.py   Werkt src/data.json bij vanuit de sheet
 dist/                 Bouwresultaat; niet handmatig aanpassen
@@ -45,7 +46,7 @@ Live adres: https://fd-weekend-sigt.patrick-7f3.workers.dev
 
 - Eerste weekend van het jaar is altijd het 2e weekend van juni, het tweede het 2e/3e weekend van november. Vanaf nov 2019 staan er exacte datums in.
 - Onder de weekendtabel staat een herhaalde namenrij met daaronder de geboortedata.
-- Correcties die de app toepast: editie 30 jaar 2121 → 2021; editie 40 heet "De Vilt" (niet "De Zilt"); de twee Charlottes houden ids `charlotte` (van Henk) en `charlotte-2` (van Gerard).
+- Correcties die de app toepast: editie 30 jaar 2121 → 2021; editie 40 heet "De Vilt" (niet "De Zilt"); de twee Charlottes heten in de sheet nu Charlotte vd Heinen (id `charlotte-vd-heinen`) en Charlotte Kleipool (`charlotte-kleipool`). Editie 1 (2000) is Gerritsen (moeder Jehee) in Putte (Woensdrecht, recreatiecentrum Hazeduinen); weer opnieuw opgehaald voor Putte. Editie 40: Annet en Martijn staan in de sheet op 0,4.
 - De SUM-formules in rij 2 van de sheet lopen tot het einde van de kolom en tellen daardoor de geboortedata mee; dat is een sheetprobleem, niet van de app.
 
 ## Functies in de app
@@ -64,7 +65,7 @@ Er is bewust geen mogelijkheid om via de app zelf anekdotes of media toe te voeg
 
 ## Nog open
 
-- Geen huisfoto: Putten (privé), Ardennen, Hunzepark.
+- Geen huisfoto: Putte (2000), Ardennen, Hunzepark.
 - Nog geen avatar: deelnemers met alleen een voornaam en de meeste kids.
 - 18 deelnemers zonder geboortedatum.
-- Editie 41 (20 tot 22 nov 2026, Larikshoeve Leusden): na het weekend aanwezigen, activiteit en anekdote invullen, en dan `wx`, `top40`, `news` en `stand` opzoeken.
+- Editie 41 (20 tot 22 nov 2026, Larikshoeve Leusden): anekdote staat er al (sheet + overrides: Jumbo laat); na het weekend aanwezigen invullen en `wx`, `top40`, `news` en `stand` opzoeken.

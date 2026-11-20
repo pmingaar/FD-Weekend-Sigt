@@ -24,7 +24,7 @@ full={'Dirk':('Dirk Heessels','Den Haag'),'Suus':('Susanne Schippers','Den Haag'
 'Nout':('Nout Boss','Heemstede-Aerdenhout'),'Roos':('Roos Boss','Heemstede-Aerdenhout'),'Alice':('Alice van Zurk','Alphen aan de Rijn'),'Richard':('Richard Vons','Alphen aan de Rijn'),
 'Tim':('Tim Vons','Alphen aan de Rijn'),'Lars':('Lars Vons','Alphen aan de Rijn')}
 people=[];seen={}
-IDS={'Charlotte (van Henk)':'charlotte','Charlotte (van Gerard)':'charlotte-2'}  # vaste ids, zodat foto's/avatars blijven kloppen
+IDS={}  # eventueel vaste ids per kolomnaam, bv. {'Naam in sheet':'id'}
 def key(n):
     if n in IDS: return IDS[n]
     import unicodedata
@@ -90,5 +90,16 @@ for i,w in enumerate(weekends):
     if w['ed']==40: w['loc']='De Vilt'  # handmatige correctie
     if not w.get('date') and not w['cancelled']:
         print('LET OP: geen datum (date) voor editie',w['ed'],w['year'],repr(w.get('datum')),'- vul handmatig in als JJJJ-MM-DD (de zaterdag)')
+# handmatige aanvullingen (data/overrides.json)
+OV=Path(__file__).resolve().parent.parent/'data'/'overrides.json'
+if OV.exists():
+    ov=json.load(open(OV,encoding='utf-8'))
+    for w in weekends:
+        o=ov.get(str(w['ed']))
+        if not o: continue
+        if o.get('anek_extra'):
+            w['anek']=((w.get('anek') or '').rstrip('. ')+'. '+o['anek_extra']).lstrip('. ')
+        for k,v in o.items():
+            if k!='anek_extra': w[k]=v
 json.dump(dict(people=people,weekends=weekends),open(OUT,'w',encoding='utf-8'),ensure_ascii=False)
 print(len(people),'deelnemers,',len(weekends),'weekenden,',sum(1 for p in people if p.get('born')),'geboortedata ->',OUT)
