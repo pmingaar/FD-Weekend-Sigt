@@ -241,12 +241,21 @@ select:hover{transform:translateY(-2px)}
 .bmonth .bl .t{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
 .bmonth .empty{font-size:12px;color:var(--muted)}
 .soonanek{margin-top:8px;background:#fff8e6;border-radius:10px;padding:8px 12px;font-size:13px}
-.inge{display:flex;align-items:center;gap:14px}
+.ingetop{display:flex;align-items:center;gap:14px}
 .ingebtn{flex:none;width:72px;height:72px;border-radius:50%;padding:0;border:3px solid #ffb347;overflow:hidden;cursor:pointer;background:none;box-shadow:0 3px 0 #c97a1a;transition:transform .2s}
 .ingebtn:hover{transform:rotate(-6deg) scale(1.05)}.ingebtn img{width:100%;height:100%;object-fit:cover;display:block}
-.ingetxt b{font-size:16px}.ingetxt small{display:block;color:var(--muted)}.ingetxt small[hidden]{display:none}
-.ingeans{margin-top:6px;background:#fff3e6;border-radius:10px;padding:8px 12px;animation:ingepop .4s ease}
-.ingeans b{color:#c0392b;font-size:18px}
+.ingetxt b{font-size:16px}.ingetxt small{display:block;color:var(--muted)}
+.iq{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.iqc{background:#f6f8f5;border-radius:12px;padding:8px;text-align:center;animation:ingepop .4s ease both}
+.iqc:nth-child(2){animation-delay:.1s}.iqc:nth-child(3){animation-delay:.2s}
+.iqc img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block}
+.iqc .nm{font-weight:700;font-size:13px;margin:4px 0}
+.iqc .bt{display:flex;gap:4px;justify-content:center}
+.iqc .bt button{flex:1;border:2px solid #1f5a40;background:#fff;border-radius:999px;font-weight:800;font-size:12px;padding:4px 0;cursor:pointer}
+.iqc .bt button.on{background:#1f5a40;color:#fff}
+.iqres{margin-top:12px;text-align:center;background:linear-gradient(135deg,#ffd76a,#ffb347);border-radius:14px;padding:14px;animation:ingepop .5s ease}
+.iqres .big{font-size:30px;font-weight:900}
+.iqres button{margin-top:8px}
 @keyframes ingepop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 /* toen */
 .then{border:2px dashed #e4dccb;border-radius:14px;padding:10px 12px;display:grid;gap:8px;font-size:13px;background:#fffdf8}
@@ -356,9 +365,11 @@ select:hover{transform:translateY(-2px)}
   </section>
 
   <section class="panel inge" id="inge">
-    <button class="ingebtn" id="ingeBtn" aria-expanded="false" title="Klik voor het antwoord"><img src="img/inge_venema.jpg" alt="Inge Venema"></button>
-    <div class="ingetxt"><b>Is Inge Venema BIV of OIV?</b><small id="ingeHint">Klik op Inge voor het antwoord</small>
-      <div class="ingeans" id="ingeAns" hidden>Het is krap, maar het is (namens Klaas) nu <b>PNIV</b><br><small>(Precies Niveau Inge Venema)</small></div></div>
+    <div class="ingetop">
+      <button class="ingebtn" id="ingeBtn" aria-expanded="false" title="Start de Inge Venema-contest"><img src="img/inge_venema.jpg" alt="Inge Venema"></button>
+      <div class="ingetxt"><b>De Inge Venema-contest: BIV of OIV?</b><small>Inge zelf is (namens Klaas) PNIV: Precies Niveau Inge Venema. Klik op Inge en beoordeel 3 FD-dames.</small></div>
+    </div>
+    <div id="ingeQuiz" hidden></div>
   </section>
 
   <section class="panel" id="rank">
@@ -760,6 +771,16 @@ document.addEventListener('mousemove',e=>{const g=e.target.closest&&e.target.clo
 /* ---------- verjaardagskalender ---------- */
 const BMND=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 function nextBday(born){const t=new Date(TODAY+'T12:00'),[y,m,d]=born.split('-').map(Number);let n=new Date(t.getFullYear(),m-1,d,12);if(n<t)n=new Date(t.getFullYear()+1,m-1,d,12);return {date:n,days:Math.round((n-t)/864e5),turns:n.getFullYear()-y};}
+
+/* ---------- Inge Venema-contest (er is geen verliezer: altijd 10 punten) ---------- */
+const INGE_POOL=['annet','alice','anneke','wendy','marije','suus','brigitte','bieneke','angela'];
+function ingeStart(){const q=document.getElementById('ingeQuiz');
+  const pool=INGE_POOL.filter(id=>byId[id]&&avatarUrl[id]).sort(()=>Math.random()-.5).slice(0,3);
+  q.hidden=false;document.getElementById('ingeBtn').setAttribute('aria-expanded','true');
+  q.innerHTML=`<div class="iq">${pool.map(id=>`<div class="iqc" data-id="${id}"><img src="${esc(avatarUrl[id])}" alt=""><div class="nm">${esc(byId[id].name)}</div><div class="bt"><button data-v="BIV">BIV</button><button data-v="OIV">OIV</button></div></div>`).join('')}</div><div id="iqRes"></div>`;}
+function ingeVote(btn){const c=btn.closest('.iqc');c.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===btn));
+  const all=[...document.querySelectorAll('#ingeQuiz .iqc')];if(all.every(x=>x.querySelector('button.on')))
+    document.getElementById('iqRes').innerHTML=`<div class="iqres"><div class="big">🏆 10 punten!</div><b>Gefeliciteerd, jij hebt de Inge Venema-contest gewonnen!</b><br><small>Je had natuurlijk alles goed. Zoals altijd.</small><br><button class="ghost" id="iqAgain">Nog een keer 🔁</button></div>`;}
 let bdayAll=false;
 function renderBday(){
   const ps=P.filter(p=>p.born);if(!document.getElementById('bdayGrid'))return;
@@ -781,7 +802,7 @@ function bdayIcs(){
   const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FD-Weekend-Sigt//Verjaardagen//NL','CALSCALE:GREGORIAN','X-WR-CALNAME:FD-verjaardagen',...ev,'END:VCALENDAR'].join('\r\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='FD-verjaardagen.ics';document.body.append(a);a.click();a.remove();
 }
-document.addEventListener('click',e=>{if(e.target.closest('#ingeBtn')){const a=document.getElementById('ingeAns'),b=document.getElementById('ingeBtn');a.hidden=!a.hidden;b.setAttribute('aria-expanded',!a.hidden);document.getElementById('ingeHint').hidden=!a.hidden;}if(e.target.closest('#bdayIcs'))bdayIcs();if(e.target.closest('#bdayMore')){bdayAll=!bdayAll;renderBday();if(!bdayAll)document.getElementById('bday').scrollIntoView({block:'start'});}});
+document.addEventListener('click',e=>{if(e.target.closest('#ingeBtn')||e.target.closest('#iqAgain'))ingeStart();const ib=e.target.closest('.iqc .bt button');if(ib)ingeVote(ib);if(e.target.closest('#bdayIcs'))bdayIcs();if(e.target.closest('#bdayMore')){bdayAll=!bdayAll;renderBday();if(!bdayAll)document.getElementById('bday').scrollIntoView({block:'start'});}});
 function renderAll(){renderPeople();renderFilters();renderGrid();renderRank();renderMap();renderBday()}
 
 /* ---------- events ---------- */
