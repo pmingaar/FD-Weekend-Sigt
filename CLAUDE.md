@@ -46,7 +46,7 @@ Live adres: https://fd-weekend-sigt.patrick-7f3.workers.dev
 
 - Eerste weekend van het jaar is altijd het 2e weekend van juni, het tweede het 2e/3e weekend van november. Vanaf nov 2019 staan er exacte datums in.
 - Onder de weekendtabel staat een herhaalde namenrij met daaronder de geboortedata.
-- Correcties die de app toepast: editie 30 jaar 2121 → 2021; editie 40 heet "De Vilt" (niet "De Zilt"); de twee Charlottes heten in de sheet nu Charlotte vd Heinen (id `charlotte-vd-heinen`) en Charlotte Kleipool (`charlotte-kleipool`). Editie 1 (2000) is Gerritsen (moeder Jehee) in Putte (Woensdrecht, recreatiecentrum Hazeduinen); weer opnieuw opgehaald voor Putte. Editie 40: Annet en Martijn staan in de sheet op 0,4.
+- Correcties die de app toepast: editie 30 jaar 2121 → 2021; editie 40 heet "De Vilt" (niet "De Zilt"); de twee Charlottes heten in de sheet nu Charlotte vd Heinen (id `charlotte-vd-heinen`) en Charlotte Kleipool (`charlotte-kleipool`). Editie 1 (2000) is Gerritsen (moeder Jehee) in Putte (Woensdrecht, recreatiecentrum Hazeduinen); weer opnieuw opgehaald voor Putte.
 - De SUM-formules in rij 2 van de sheet lopen tot het einde van de kolom en tellen daardoor de geboortedata mee; dat is een sheetprobleem, niet van de app.
 
 ## Functies in de app
