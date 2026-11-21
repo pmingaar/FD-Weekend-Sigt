@@ -2,5 +2,16 @@
  "_uitleg": "Handmatige aanvullingen die niet in de sheet staan. Sleutel = editienummer. Wordt door update_from_sheet.py na het inlezen toegepast.",
  "41": {
   "anek_extra": "De Jumbo was laat."
+ },
+ "_people": {
+  "jesse": {
+   "born": "2012-09-20"
+  },
+  "charlotte-vd-heinen": {
+   "born": "1975-05-17"
+  },
+  "angela": {
+   "born": "1975-10-29"
+  }
  }
 }

@@ -94,6 +94,8 @@ for i,w in enumerate(weekends):
 OV=Path(__file__).resolve().parent.parent/'data'/'overrides.json'
 if OV.exists():
     ov=json.load(open(OV,encoding='utf-8'))
+    for p in people:
+        if p['id'] in ov.get('_people',{}): p.update(ov['_people'][p['id']])  # bv. geboortedata die (nog) niet in de sheet staan
     for w in weekends:
         o=ov.get(str(w['ed']))
         if not o: continue

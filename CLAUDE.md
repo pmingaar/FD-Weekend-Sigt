@@ -67,5 +67,5 @@ Er is bewust geen mogelijkheid om via de app zelf anekdotes of media toe te voeg
 
 - Geen huisfoto: Putte (2000), Ardennen, Hunzepark.
 - Nog geen avatar: deelnemers met alleen een voornaam en de meeste kids.
-- 18 deelnemers zonder geboortedatum.
+- 15 deelnemers zonder geboortedatum (aanvullingen buiten de sheet staan in data/overrides.json onder "_people").
 - Editie 41 (20 tot 22 nov 2026, Larikshoeve Leusden): anekdote staat er al (sheet + overrides: Jumbo laat); na het weekend aanwezigen invullen en `wx`, `top40`, `news` en `stand` opzoeken.
