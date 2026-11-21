@@ -1,7 +1,8 @@
 {
  "_uitleg": "Handmatige aanvullingen die niet in de sheet staan. Sleutel = editienummer. Wordt door update_from_sheet.py na het inlezen toegepast.",
  "41": {
-  "anek_extra": "De Jumbo was laat."
+  "anek_extra": "De Jumbo was laat.",
+  "annie": "Nee! Ze vond de locatie zelfs beter dan René 🏆"
  },
  "_people": {
   "jesse": {
