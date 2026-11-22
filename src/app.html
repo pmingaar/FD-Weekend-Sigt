@@ -704,7 +704,7 @@ function renderGrid(){
         ${thenHTML(w)}
         <div class="album" data-alb="${w.ed}">${albumUrl[w.ed]
             ?`<a class="albtn" href="${esc(albumUrl[w.ed])}" target="_blank" rel="noopener">📸 Foto's van dit weekend ↗</a>`
-            :`<span class="albtn off">📸 Foto's volgen binnenkort</span>`}
+            :(gallery[w.ed]||[]).length?'':`<span class="albtn off">📸 Foto's volgen binnenkort</span>`}
           </div>
         ${w.anek?`<button class="anek" data-a="${w.i}"><span class="play">▶</span><span class="txt"><small>Anekdote</small>${esc(w.anek)}</span></button>`:`<div class="noanek">Nog geen anekdote.</div>`}${(()=>{const L=(LASTMEE[W.indexOf(w)]||[]).map(id=>byId[id]).filter(Boolean);return L.length?`<div class="lastmee">👋 <b>Voor het laatst mee:</b> ${L.map(p=>`<span data-p="${p.id}" class="lastp">${esc(p.name)}</span>`).join(', ')}</div>`:''})()}
       </div></article>`;

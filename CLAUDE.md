@@ -68,5 +68,5 @@ Er is bewust geen mogelijkheid om via de app zelf anekdotes of media toe te voeg
 - Geen huisfoto: Putte (2000), Ardennen, Hunzepark.
 - Nog geen avatar: deelnemers met alleen een voornaam en de meeste kids.
 - 15 deelnemers zonder geboortedatum (aanvullingen buiten de sheet staan in data/overrides.json onder "_people").
-- Editie 41 (20 tot 22 nov 2026, Larikshoeve Leusden) is ingevuld op 21 nov: weer zondag is nog een verwachting (later vervangen door archiefdata), stand na 12 speelrondes 2026/27 (ADO weer in de Eredivisie, 17e). Annie-antwoord vast via overrides (`annie`).
+- Editie 41 (20 tot 22 nov 2026, Larikshoeve Leusden) is ingevuld; 15 foto's uit de WhatsApp-groep in de collage (public/img/fd41_*.jpg), activiteit en extra anekdote via overrides, stand na 12 speelrondes 2026/27 (ADO weer in de Eredivisie, 17e). Annie-antwoord vast via overrides (`annie`).
 - Volgende weekend: na afloop aanwezigen uit de sheet, dan `wx`, `top40`, `news` en `stand` opzoeken.
